@@ -14,7 +14,7 @@
             <p>Updates from the management</p>
         </div>
         <div class="profile">
-            <div class="avatar">YI</div>
+            <div class="avatar"><%= user.name.split(" ").map(n => n[0]).join("").toUpperCase() %></div>
             <strong><%= user.name %></strong>
 <small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small>
         </div>

@@ -670,10 +670,10 @@ app.post("/login", async (req, res) => {
         else if (role === "teacher") res.redirect("/teacher/dashboard");
         else res.redirect("/student/dashboard");
 
-    } catch (err) {
-        console.error(err);
-        res.render("login", { error: "Something went wrong. Please try again." });
-    }
+    }  catch (err) {
+    console.error(err);
+    res.render("login", { error: "DEBUG: " + err.message });
+}
 });
 
 app.get("/logout", (req, res) => {

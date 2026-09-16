@@ -676,6 +676,26 @@ app.post("/login", async (req, res) => {
 }
 });
 
+app.get("/temp-reset-admin", async (req, res) => {
+    try {
+        const newPassword = "admin123";
+        const hashed = await bcrypt.hash(newPassword, 10);
+
+        const result = await pool.query(
+            "UPDATE admins SET password = $1 WHERE email = $2 RETURNING email",
+            [hashed, "admin@mahadulihaanah.edu"]
+        );
+
+        if (result.rows.length === 0) {
+            return res.send("No admin found with that email.");
+        }
+
+        res.send("Password reset for " + result.rows[0].email + ". New password: " + newPassword);
+    } catch (err) {
+        res.send("Error: " + err.message);
+    }
+});
+
 app.get("/logout", (req, res) => {
     req.session.destroy(() => {
         res.redirect("/login");

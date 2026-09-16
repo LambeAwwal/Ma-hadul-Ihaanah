@@ -1522,7 +1522,13 @@ td {
     .footer-links a {
         font-size: 12px;
     }
+    /* ==============================
+       LOGIN PAGE
+    ============================== */
 
+    .login-container {
+        flex-direction: column;
+    }
 }
 
 

@@ -1,0 +1,261 @@
+<%- include("partials/header") %>
+<%- include("partials/sidebar") %>
+
+<div class="logout">
+   <a href="/logout">🚪 Logout</a>
+</div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>Classes</h1>
+            <p>Manage class groups, teachers, and schedules</p>
+        </div>
+
+        <div class="profile">
+            <div class="avatar">A</div>
+            <div>
+                <strong><%= user.name %></strong>
+<small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small>
+            </div>
+        </div>
+    </header>
+
+    <!-- CLASS STATISTICS -->
+    <section class="stats">
+
+    <div class="card">
+        <span class="icon">🏫</span>
+        <div>
+            <p>Total Classes</p>
+            <h2><%= totalClasses %></h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <span class="icon">✅</span>
+        <div>
+            <p>Active Classes</p>
+            <h2><%= activeClasses %></h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <span class="icon">👨‍🎓</span>
+        <div>
+            <p>Students Enrolled</p>
+            <h2><%= studentsEnrolled %></h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <span class="icon">👨‍🏫</span>
+        <div>
+            <p>Teachers Assigned</p>
+            <h2><%= teachersAssigned %></h2>
+        </div>
+    </div>
+
+</section>
+
+    <!-- CLASS MANAGEMENT -->
+    <section class="panel">
+
+        <div class="student-toolbar">
+            <div>
+                <h2>All Classes</h2>
+                <p class="toolbar-description">View and manage school class groups</p>
+            </div>
+
+            <button class="add-student-btn" onclick="openClassModal()">
+                + Add Class
+            </button>
+        </div>
+
+        <!-- SEARCH + FILTER -->
+        <div class="student-filters">
+
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="classSearch"
+                       placeholder="Search class..."
+                       onkeyup="searchClasses()">
+            </div>
+
+            <select id="classStatusFilter" onchange="filterClasses()">
+                <option value="all">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
+
+        </div>
+
+        <!-- CLASS CARDS -->
+      <div class="classes-grid" id="classesGrid">
+
+    <% classes.forEach(cls => { %>
+
+        <div class="class-card" data-status="<%= cls.status %>">
+            <div class="class-card-header">
+                <h3><%= cls.class_name %></h3>
+                <span class="status active-status"><%= cls.status %></span>
+            </div>
+
+            <div class="class-teacher">
+                👤 <span><%= cls.teacher_name %></span>
+            </div>
+
+            <div class="class-meta">
+                <span>👨‍🎓 Students: <strong><%= cls.student_count %></strong></span>
+                <span>📅 Schedule: <strong><%= cls.schedule %></strong></span>
+            </div>
+
+            <div class="class-courses">
+                <% cls.courses.split(",").forEach(course => { %>
+                    <span class="course-tag"><%= course.trim() %></span>
+                <% }); %>
+            </div>
+
+            <div class="class-card-footer" style="gap: 8px;">
+    <a class="action-btn" href="/classes/<%= cls.id %>" style="text-decoration:none;">View</a>
+    <button class="action-btn" onclick="openEditClassModal(<%= cls.id %>, '<%= cls.class_name %>', '<%= cls.teacher_name %>', '<%= cls.schedule %>', '<%= cls.courses %>', <%= cls.capacity || 0 %>, '<%= cls.status %>')">Edit</button>
+    <button class="action-btn" style="background:#fee2e2; color:#991b1b; border-color:#fee2e2;" onclick="confirmDeleteClass(<%= cls.id %>, '<%= cls.class_name %>')">Delete</button>
+</div>
+        </div>
+
+    <% }); %>
+
+</div>
+    </section>
+    <%- include("partials/footer") %>
+</main>
+
+<!-- ADD CLASS MODAL -->
+<div class="modal-overlay" id="classModal">
+
+    <div class="student-modal">
+
+        <div class="modal-header">
+            <div>
+                <h2>Add New Class</h2>
+                <p>Create a new class group</p>
+            </div>
+
+            <button class="close-modal" onclick="closeClassModal()">×</button>
+        </div>
+
+        <form method="POST" action="/classes">
+
+    <div class="form-grid">
+
+        <div class="form-group">
+            <label>Class Name</label>
+            <input type="text" name="class_name" placeholder="e.g. Beginner 3" required>
+        </div>
+
+        <div class="form-group">
+            <label>Class Teacher</label>
+            <select name="teacher_name" required>
+    <option value="">Select teacher</option>
+    <% teachers.forEach(t => { %>
+        <option><%= t.full_name %></option>
+    <% }); %>
+</select>
+        </div>
+
+        <div class="form-group">
+            <label>Schedule</label>
+            <input type="text" name="schedule" placeholder="e.g. Sat–Wed, 8:00–10:00 AM">
+        </div>
+
+        <div class="form-group">
+            <label>Capacity</label>
+            <input type="number" name="capacity" min="1" placeholder="25">
+        </div>
+
+        <div class="form-group full-width">
+            <label>Courses</label>
+            <input type="text" name="courses" placeholder="e.g. Qur'an, Tajweed, Arabic Language">
+        </div>
+
+        <div class="form-group">
+            <label>Status</label>
+            <select name="status" required>
+                <option>Active</option>
+                <option>Inactive</option>
+            </select>
+        </div>
+
+    </div>
+
+    <div class="form-actions">
+        <button type="button" class="cancel-btn" onclick="closeClassModal()">Cancel</button>
+        <button type="submit" class="save-btn">Save Class</button>
+    </div>
+
+</form>
+    </div>
+</div>
+
+<!-- EDIT CLASS MODAL -->
+<div class="modal-overlay" id="editClassModal">
+    <div class="student-modal">
+        <div class="modal-header">
+            <div>
+                <h2>Edit Class</h2>
+                <p>Update class details</p>
+            </div>
+            <button class="close-modal" onclick="closeEditClassModal()">×</button>
+        </div>
+
+        <form method="POST" id="editClassForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Class Name</label>
+                    <input type="text" name="class_name" id="editClassName" required>
+                </div>
+                <div class="form-group">
+                    <label>Class Teacher</label>
+                    <select name="teacher_name" id="editClassTeacher" required>
+    <% teachers.forEach(t => { %>
+        <option><%= t.full_name %></option>
+    <% }); %>
+</select>
+                </div>
+                <div class="form-group">
+                    <label>Schedule</label>
+                    <input type="text" name="schedule" id="editClassSchedule">
+                </div>
+                <div class="form-group">
+                    <label>Capacity</label>
+                    <input type="number" name="capacity" id="editClassCapacity" min="1">
+                </div>
+                <div class="form-group full-width">
+                    <label>Courses</label>
+                    <input type="text" name="courses" id="editClassCourses">
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select name="status" id="editClassStatus" required>
+                        <option>Active</option>
+                        <option>Inactive</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="cancel-btn" onclick="closeEditClassModal()">Cancel</button>
+                <button type="submit" class="save-btn">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<form id="deleteClassForm" method="POST" style="display:none;"></form>
+
+<script src="/js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,244 @@
+<%- include("partials/header") %>
+<%- include("partials/sidebar") %>
+
+<div class="logout">
+    <a href="/logout">🚪 Logout</a>
+</div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>Results</h1>
+            <p>Record and review student exam and assignment results</p>
+        </div>
+
+        <div class="profile">
+            <div class="avatar">A</div>
+            <div>
+               <strong><%= user.name %></strong>
+<small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small>
+            </div>
+        </div>
+    </header>
+
+    <!-- RESULT STATISTICS -->
+    <section class="stats">
+
+    <div class="card">
+        <span class="icon">📊</span>
+        <div>
+            <p>Total Records</p>
+            <h2><%= totalRecords %></h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <span class="icon">📈</span>
+        <div>
+            <p>Average Score</p>
+            <h2><%= averageScore %>%</h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <span class="icon">🏆</span>
+        <div>
+            <p>Highest Score</p>
+            <h2><%= highestScore %>%</h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <span class="icon">✅</span>
+        <div>
+            <p>Pass Rate</p>
+            <h2><%= passRate %>%</h2>
+        </div>
+    </div>
+
+</section>
+
+    <!-- RESULTS MANAGEMENT -->
+    <section class="panel">
+
+        <div class="student-toolbar">
+            <div>
+                <h2>All Results</h2>
+                <p class="toolbar-description">View and manage recorded results</p>
+            </div>
+
+            <button class="add-student-btn" onclick="openResultModal()">
+                + Add Result
+            </button>
+        </div>
+
+        <!-- SEARCH + FILTERS -->
+        <div class="student-filters">
+
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="resultSearch"
+                       placeholder="Search student or course..."
+                       onkeyup="searchResults()">
+            </div>
+
+            <select id="resultCourseFilter" onchange="filterResults()">
+                <option value="all">All Courses</option>
+                <option>Arabic Language</option>
+                <option>Qur'an</option>
+                <option>Tajweed</option>
+                <option>Hadith</option>
+                <option>Fiqh</option>
+                <option>Islamic Studies</option>
+            </select>
+
+            <select id="resultTermFilter" onchange="filterResults()">
+                <option value="all">All Terms</option>
+                <option>Term 1</option>
+                <option>Term 2</option>
+                <option>Term 3</option>
+            </select>
+
+        </div>
+
+        <!-- RESULTS TABLE -->
+        <div class="table-container">
+            <table id="resultsTable">
+
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Course</th>
+                        <th>Exam Type</th>
+                        <th>Score</th>
+                        <th>Grade</th>
+                        <th>Term</th>
+                        <th>Remarks</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+    <% results.forEach(result => { %>
+
+        <tr>
+            <td>
+                <div class="student-name">
+                    <div class="student-avatar">
+                        <%= result.student_name.split(" ").map(n => n[0]).join("").toUpperCase() %>
+                    </div>
+                    <div><strong><%= result.student_name %></strong></div>
+                </div>
+            </td>
+            <td><%= result.course_name %></td>
+            <td><%= result.exam_type %></td>
+            <td><%= result.score %>%</td>
+            <td><span class="grade grade-<%= result.grade.toLowerCase() %>"><%= result.grade %></span></td>
+            <td><%= result.term %></td>
+            <td><%= result.remarks %></td>
+            <td>
+                <% if (result.student_id) { %>
+    <a class="action-btn" href="/students/<%= result.student_id %>" style="text-decoration:none; display:inline-block;">View</a>
+<% } else { %>
+    <span class="action-btn" style="opacity: 0.5; cursor: not-allowed;">View</span>
+<% } %>
+            </td>
+        </tr>
+
+    <% }); %>
+
+</tbody>
+            </table>
+        </div>
+    </section>
+    <%- include("partials/footer") %>
+</main>
+
+<!-- ADD RESULT MODAL -->
+<div class="modal-overlay" id="resultModal">
+
+    <div class="student-modal">
+
+        <div class="modal-header">
+            <div>
+                <h2>Add New Result</h2>
+                <p>Record a student's score</p>
+            </div>
+
+            <button class="close-modal" onclick="closeResultModal()">×</button>
+        </div>
+
+        <form method="POST" action="/results">
+
+    <div class="form-grid">
+
+        <div class="form-group">
+            <label>Student</label>
+            <select name="student_name" required>
+                <option value="">Select student</option>
+                <option>Ahmad Abdullah</option>
+                <option>Yusuf Ibrahim</option>
+                <option>Aisha Rahman</option>
+                <option>Musa Abdulrahman</option>
+                <option>Hamza Suleiman</option>
+                <option>Zainab Kareem</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Course</label>
+            <select name="course_name" required>
+                <option value="">Select course</option>
+                <option>Arabic Language</option>
+                <option>Qur'an</option>
+                <option>Tajweed</option>
+                <option>Hadith</option>
+                <option>Fiqh</option>
+                <option>Islamic Studies</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Exam Type</label>
+            <select name="exam_type" required>
+                <option value="">Select type</option>
+                <option>Test</option>
+                <option>Assignment</option>
+                <option>Examination</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Score (%)</label>
+            <input type="number" name="score" min="0" max="100" placeholder="85" required>
+        </div>
+
+        <div class="form-group">
+            <label>Term</label>
+            <select name="term" required>
+                <option>Term 1</option>
+                <option>Term 2</option>
+                <option>Term 3</option>
+            </select>
+        </div>
+
+        <div class="form-group full-width">
+            <label>Remarks</label>
+            <textarea name="remarks" placeholder="Teacher's remarks"></textarea>
+        </div>
+
+    </div>
+
+    <div class="form-actions">
+        <button type="button" class="cancel-btn" onclick="closeResultModal()">Cancel</button>
+        <button type="submit" class="save-btn">Save Result</button>
+    </div>
+
+</form>
+    </div>
+</div>
+
+<script src="/js/app.js"></script>

@@ -1,0 +1,1683 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #F5F7F4;
+    color: #5E3122;
+}
+
+/* images */
+img {
+    display: block;
+    margin: 0 auto;
+    max-width: 50%;
+    justify-content: center;
+    align-items: center;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 250px;
+    height: 100vh;
+    background: #004D3B;
+    color: white;
+    padding: 25px 15px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+
+.logo {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.logo h2 {
+    font-size: 28px;
+}
+
+.logo p {
+    font-size: 12px;
+    margin-top: 5px;
+    opacity: 0.7;
+}
+
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.sidebar nav a,
+.logout a {
+    text-decoration: none;
+    color: #cbd5e1;
+
+    padding: 12px 15px;
+
+    border-radius: 8px;
+
+    transition: 0.3s;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active {
+    background: #008060;
+    color: white;
+}
+
+
+.logout {
+    margin-top: auto;
+    background: #006B4F;    
+
+}
+
+
+/* MAIN */
+
+.main {
+    margin-left: 250px;
+    padding: 30px;
+}
+
+
+/* TOPBAR */
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 30px;
+}
+
+.topbar h1 {
+    font-size: 30px;
+}
+
+.topbar p {
+    color: #66473c;
+    margin-top: 5px;
+}
+
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile small {
+    display: block;
+    color: #66473c;
+}
+
+.avatar {
+    width: 45px;
+    height: 45px;
+
+    border-radius: 50%;
+
+    background: #5E3122;
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: bold;
+}
+
+
+/* STATISTICS */
+
+.stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+}
+
+
+.card {
+    background: #F9D2BA;
+
+    padding: 22px;
+
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.card .icon {
+    font-size: 30px;
+}
+
+.card p {
+    color: #66473c;
+    font-size: 14px;
+}
+
+.card h2 {
+    margin-top: 5px;
+}
+
+
+/* GRID */
+
+.dashboard-grid {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+}
+
+/* Subtle polish - safe, professional transitions */
+.card, .class-card, .panel {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover, .class-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.action-btn, .add-student-btn, .save-btn {
+    transition: transform 0.1s ease;
+}
+
+.action-btn:active, .add-student-btn:active, .save-btn:active {
+    transform: scale(0.97);
+}
+/* PANEL */
+
+.panel {
+    background: #F9D2BA;
+
+    border-radius: 12px;
+
+    padding: 25px;
+
+    margin-bottom: 25px;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.panel-header h2 {
+    font-size: 19px;
+}
+
+.panel-header a {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.panel-header button {
+    border: none;
+
+    background: #006B4F;
+
+    color: white;
+
+    padding: 10px 15px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+}
+
+
+/* ATTENDANCE */
+
+.attendance {
+    display: flex;
+    align-items: center;
+
+    justify-content: space-around;
+}
+
+.attendance-number h1 {
+    font-size: 50px;
+}
+
+.attendance-number p {
+    color: #66473c;
+}
+
+.attendance-details p {
+    margin-bottom: 10px;
+}
+
+
+/* ANNOUNCEMENTS */
+
+.announcement {
+    padding: 15px 0;
+
+    border-bottom:
+        1px solid #e5e7eb;
+}
+
+.announcement h3 {
+    margin-bottom: 5px;
+}
+
+.announcement p {
+    color: #66473c;
+    line-height: 1.5;
+}
+
+.announcement small {
+    display: block;
+    margin-top: 7px;
+    color: #a17e6d;
+}
+
+/* =================================
+   ANNOUNCEMENTS PAGE
+================================= */
+
+.announcement-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.audience-tag {
+    background: #F9D2BA;
+    color: #5E3122;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+#announcementsList .announcement:last-child {
+    border-bottom: none;
+}
+
+
+/* TABLE */
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 15px;
+
+    text-align: left;
+
+    border-bottom:
+        1px solid #e5e7eb;
+}
+
+th {
+    color: #664338;
+    font-size: 14px;
+}
+
+td {
+    font-size: 14px;
+}
+
+
+.status {
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+}
+
+.active-status {
+    background: #dcfce7;
+    color: #166534;
+}
+
+/* MOBILE MENU BUTTON */
+
+.menu-toggle {
+    display: none;
+
+    position: fixed;
+    top: 18px;
+    left: 18px;
+
+    z-index: 1001;
+
+    width: 45px;
+    height: 45px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #0f172a;
+    color: white;
+
+    font-size: 24px;
+
+    cursor: pointer;
+}
+
+
+/* SIDEBAR OVERLAY */
+
+.sidebar-overlay {
+    display: none;
+
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.4);
+
+    z-index: 999;
+}
+
+/* =================================
+   COURSE PROGRESS BAR
+================================= */
+
+.course-progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #66473c;
+    margin-bottom: 6px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(94, 49, 34, 0.12);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #006B4F;
+    border-radius: 20px;
+}
+
+
+/* =================================
+   STUDENT MANAGEMENT
+================================= */
+
+.student-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.toolbar-description {
+    color: #64748b;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.add-student-btn {
+    border: none;
+    background: #006B4F;
+    color: white;
+    padding: 11px 18px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.add-student-btn:hover {
+    opacity: 0.9;
+}
+
+
+/* FILTERS */
+
+.student-filters {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.search-box {
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 7px;
+
+    padding: 0 12px;
+}
+
+.search-box input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 12px 0;
+    font-size: 14px;
+}
+
+.student-filters select {
+    border: 1px solid #e2e8f0;
+    border-radius: 7px;
+    padding: 0 12px;
+    background: white;
+    outline: none;
+}
+
+
+/* STUDENT NAME */
+
+.student-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.student-avatar {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 50%;
+
+    background: #e2e8f0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.student-name small {
+    display: block;
+    color: #94a3b8;
+    margin-top: 3px;
+}
+
+
+/* ACTION BUTTON */
+
+.action-btn {
+    border: 1px solid #dbeafe;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    padding: 6px 12px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+}
+
+.action-btn:hover {
+    background: #dbeafe;
+}
+
+
+/* =================================
+   ADD STUDENT MODAL
+================================= */
+
+.modal-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(15, 23, 42, 0.55);
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 2000;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.student-modal {
+    width: 100%;
+    max-width: 700px;
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    background: white;
+
+    border-radius: 12px;
+
+    padding: 25px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    margin-bottom: 25px;
+}
+
+.modal-header p {
+    color: #64748b;
+
+    font-size: 14px;
+
+    margin-top: 5px;
+}
+
+.close-modal {
+    border: none;
+
+    background: transparent;
+
+    font-size: 30px;
+
+    cursor: pointer;
+
+    color: #64748b;
+}
+
+
+/* FORM */
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 7px;
+
+    padding: 11px;
+
+    outline: none;
+
+    font-family: inherit;
+}
+
+.form-group textarea {
+    min-height: 90px;
+
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #2563eb;
+}
+
+
+/* FORM BUTTONS */
+
+.form-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 25px;
+}
+
+.cancel-btn,
+.save-btn {
+    padding: 11px 18px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+}
+
+.cancel-btn {
+    border: 1px solid #e2e8f0;
+
+    background: white;
+}
+
+.save-btn {
+    border: none;
+
+    background: #006B4F;
+
+    color: white;
+}
+
+/* FOOTER */
+
+.footer {
+    margin-top: 40px;
+    padding: 20px 30px;
+    background: #004D3B;
+    color: white;
+}
+
+.main {
+    padding-bottom: 0;
+}
+
+.footer {
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.footer-line {
+    height: 1px;
+    background: #485058;
+    margin-bottom: 18px;
+}
+
+.footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 50px;
+}
+
+.copyright {
+    font-size: 15px;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-icon {
+    width: 34px;
+    height: 34px;
+
+    background: #d1d5d8;
+    color: #1f252b;
+
+    border-radius: 7px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.footer-links {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.footer-links a:hover {
+    color: white;
+}
+
+/* =================================
+   CLASSES
+================================= */
+
+.classes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.class-card {
+    background: #F9D2BA;
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.class-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.class-card-header h3 {
+    font-size: 19px;
+    color: #5E3122;
+}
+
+.class-teacher {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #66473c;
+}
+
+.class-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+    color: #66473c;
+}
+
+.class-meta strong {
+    color: #5E3122;
+}
+
+.class-courses {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.course-tag {
+    background: white;
+    color: #006B4F;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.class-card-footer {
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid rgba(94, 49, 34, 0.15);
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* =================================
+   ATTENDANCE
+================================= */
+
+.date-input {
+    border: 1px solid #e2e8f0;
+    border-radius: 7px;
+    padding: 0 12px;
+    background: white;
+    outline: none;
+    font-family: inherit;
+    font-size: 14px;
+    min-width: 160px;
+}
+
+.attendance-toggle {
+    display: flex;
+    gap: 6px;
+}
+
+.att-btn {
+    border: 1px solid #e2e8f0;
+    background: white;
+    color: #66473c;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.att-btn:hover {
+    opacity: 0.8;
+}
+
+.att-btn.present.active {
+    background: #dcfce7;
+    color: #166534;
+    border-color: #dcfce7;
+}
+
+.att-btn.absent.active {
+    background: #fee2e2;
+    color: #991b1b;
+    border-color: #fee2e2;
+}
+
+.att-btn.late.active {
+    background: #fef3c7;
+    color: #92400e;
+    border-color: #fef3c7;
+}
+
+/* =================================
+   RESULTS - GRADE BADGES
+================================= */
+
+.grade {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.grade-a {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.grade-b {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.grade-c {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.grade-d {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* =================================
+   LOGIN PAGE
+================================= */
+
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F5F7F4;
+    padding: 20px;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 900px;
+
+    display: flex;
+
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* BRAND SIDE */
+
+.login-brand {
+    flex: 1;
+
+    background: #004D3B;
+    color: white;
+
+    padding: 45px 35px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.login-brand img {
+    max-width: 130px;
+    margin-bottom: 20px;
+}
+
+.login-brand h2 {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.login-tagline {
+    font-size: 15px;
+    opacity: 0.9;
+    margin-bottom: 6px;
+}
+
+.login-subtext {
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+/* FORM SIDE */
+
+.login-form-side {
+    flex: 1;
+
+    padding: 45px 40px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login-form-side h1 {
+    font-size: 26px;
+    color: #5E3122;
+    margin-bottom: 8px;
+}
+
+.login-instructions {
+    color: #66473c;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+.login-form-side .form-group {
+    margin-bottom: 18px;
+}
+
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-size: 13px;
+    color: #66473c;
+
+    margin-bottom: 22px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.login-options a {
+    color: #006B4F;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-btn {
+    width: 100%;
+
+    border: none;
+    background: #006B4F;
+    color: white;
+
+    padding: 13px;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.login-btn:hover {
+    opacity: 0.9;
+}
+/* =================================
+   RESPONSIVE DESIGN
+   ================================= */
+
+/* ---------------------------------
+   LARGE LAPTOPS / DESKTOP
+   1201px and above
+--------------------------------- */
+
+@media (min-width: 1201px) {
+
+    .main {
+        margin-left: 250px;
+        padding: 30px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .classes-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+
+/* ---------------------------------
+   LAPTOPS
+   901px - 1200px
+--------------------------------- */
+
+@media (min-width: 901px) and (max-width: 1200px) {
+
+    .sidebar {
+        width: 220px;
+    }
+
+    .main {
+        margin-left: 220px;
+        padding: 25px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+
+    .classes-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+
+    .topbar h1 {
+        font-size: 27px;
+    }
+
+}
+
+
+/* ---------------------------------
+   TABLETS
+   601px - 900px
+--------------------------------- */
+
+@media (min-width: 601px) and (max-width: 900px) {
+
+    .sidebar {
+        width: 200px;
+    }
+
+    .main {
+        margin-left: 200px;
+        padding: 25px 20px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .classes-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .card {
+        padding: 18px;
+    }
+
+    .panel {
+        padding: 20px;
+    }
+
+    .topbar h1 {
+        font-size: 25px;
+    }
+
+    .student-toolbar {
+        gap: 15px;
+    }
+
+    .student-filters {
+        flex-wrap: wrap;
+    }
+
+    .student-filters .search-box {
+        min-width: 100%;
+    }
+
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .login-container {
+        max-width: 750px;
+    }
+
+    .login-brand,
+    .login-form-side {
+        padding: 35px 25px;
+    }
+
+}
+
+
+/* ---------------------------------
+   MOBILE
+   401px - 600px
+--------------------------------- */
+
+@media (max-width: 600px) {
+
+    /* ==============================
+       SIDEBAR
+    ============================== */
+
+    .sidebar {
+        display: flex;
+        width: 250px;
+        left: -250px;
+        transition: left 0.3s ease;
+        z-index: 1000;
+    }
+
+    .sidebar.show {
+        left: 0;
+    }
+
+    .sidebar-overlay.show {
+        display: block;
+    }
+
+    .menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    /* ==============================
+       MAIN CONTENT
+    ============================== */
+
+    .main {
+        margin-left: 0;
+        padding: 80px 15px 20px;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+
+    /* ==============================
+       TOPBAR
+    ============================== */
+
+    .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .topbar h1 {
+        font-size: 24px;
+    }
+
+    .topbar p {
+        font-size: 13px;
+    }
+
+    .profile {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+
+    /* ==============================
+       STATISTICS
+    ============================== */
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .card {
+        padding: 15px;
+        gap: 10px;
+    }
+
+    .card .icon {
+        font-size: 24px;
+    }
+
+    .card p {
+        font-size: 12px;
+    }
+
+    .card h2 {
+        font-size: 20px;
+    }
+
+
+    /* ==============================
+       DASHBOARD
+    ============================== */
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .panel {
+        padding: 18px;
+        margin-bottom: 15px;
+    }
+
+    .panel-header {
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .panel-header h2 {
+        font-size: 17px;
+    }
+
+
+    /* ==============================
+       ATTENDANCE
+    ============================== */
+
+    .attendance {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+
+    .attendance-number h1 {
+        font-size: 42px;
+    }
+
+    .attendance-details {
+        width: 100%;
+    }
+
+    .attendance-toggle {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+
+    /* ==============================
+       STUDENT MANAGEMENT
+    ============================== */
+
+    .student-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .add-student-btn {
+        width: 100%;
+    }
+
+    .student-filters {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+
+    .student-filters select {
+        width: 100%;
+        height: 45px;
+    }
+
+
+    /* ==============================
+       TABLES
+    ============================== */
+
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 650px;
+    }
+
+    th,
+    td {
+        padding: 11px 10px;
+        white-space: nowrap;
+    }
+
+
+    /* ==============================
+       CLASSES
+    ============================== */
+
+    .classes-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .class-card {
+        padding: 18px;
+    }
+
+
+    /* ==============================
+       FORMS
+    ============================== */
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .form-group.full-width {
+        grid-column: auto;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .cancel-btn,
+    .save-btn {
+        width: 100%;
+    }
+
+
+    /* ==============================
+       MODAL
+    ============================== */
+
+    .modal-overlay {
+        padding: 10px;
+    }
+
+    .student-modal {
+        width: 100%;
+        max-width: 100%;
+        max-height: 95vh;
+        padding: 18px;
+        border-radius: 10px;
+    }
+
+    .modal-header {
+        gap: 10px;
+    }
+
+    .modal-header h2 {
+        font-size: 20px;
+    }
+
+
+    /* ==============================
+       FOOTER
+    ============================== */
+
+    .footer {
+        padding: 18px 15px;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+    }
+
+    .footer-links a {
+        font-size: 12px;
+    }
+
+}
+
+
+/* ---------------------------------
+   SMALL PHONES
+   400px and below
+--------------------------------- */
+
+@media (max-width: 400px) {
+
+    .main {
+        padding: 75px 10px 15px;
+    }
+
+
+    /* Sidebar */
+
+    .sidebar {
+        width: 230px;
+        left: -230px;
+    }
+
+    .sidebar.show {
+        left: 0;
+    }
+
+
+    /* Menu */
+
+    .menu-toggle {
+        width: 42px;
+        height: 42px;
+        top: 15px;
+        left: 15px;
+        font-size: 21px;
+    }
+
+
+    /* Topbar */
+
+    .topbar h1 {
+        font-size: 21px;
+    }
+
+
+    /* Statistics */
+
+    .stats {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .card {
+        padding: 14px;
+    }
+
+
+    /* Panels */
+
+    .panel {
+        padding: 15px;
+    }
+
+
+    /* Class cards */
+
+    .class-card {
+        padding: 15px;
+    }
+
+
+    /* Attendance */
+
+    .attendance-number h1 {
+        font-size: 36px;
+    }
+
+
+    /* Footer */
+
+    .copyright {
+        font-size: 12px;
+    }
+
+    .footer-links {
+        gap: 8px;
+    }
+
+    .footer-links a {
+        font-size: 11px;
+    }
+
+
+    /* Login */
+
+    .login-page {
+        padding: 10px;
+    }
+
+    .login-container {
+        border-radius: 10px;
+    }
+
+    .login-brand {
+        padding: 25px 18px;
+    }
+
+    .login-brand img {
+        max-width: 80px;
+    }
+
+    .login-brand h2 {
+        font-size: 16px;
+    }
+
+    .login-tagline {
+        font-size: 13px;
+    }
+
+    .login-form-side {
+        padding: 25px 18px;
+    }
+
+    .login-form-side h1 {
+        font-size: 22px;
+    }
+
+    .login-options {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+}
+
+
+/* ---------------------------------
+   PREVENT HORIZONTAL OVERFLOW
+--------------------------------- */
+
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+input,
+select,
+textarea,
+button {
+    max-width: 100%;
+}

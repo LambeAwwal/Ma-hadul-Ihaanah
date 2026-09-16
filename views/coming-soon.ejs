@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coming Soon</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        .coming-soon {
+            text-align: center;
+            max-width: 500px;
+            padding: 40px 20px;
+        }
+
+        .icon {
+            font-size: 70px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #6b7280;
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 22px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        .back-btn:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="coming-soon">
+
+        <div class="icon">🚧</div>
+
+        <h1><%= feature %> — Coming Soon</h1>
+
+<p>
+    The <%= feature %> section is currently under development.
+    We'll have it ready for you soon.
+</p>
+
+        <a href="/student/dashboard" class="back-btn">
+            Back to Dashboard
+        </a>
+
+    </div>
+
+</body>
+</html>

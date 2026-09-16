@@ -1,0 +1,10 @@
+ALTER TABLE students ADD COLUMN password VARCHAR(255);
+ALTER TABLE teachers ADD COLUMN password VARCHAR(255);
+
+CREATE TABLE admins (
+    id SERIAL PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);

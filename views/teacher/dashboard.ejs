@@ -1,0 +1,119 @@
+<%- include("../partials/header") %>
+<%- include("../partials/teacher-sidebar") %>
+
+<div class="logout">
+    <a href="/logout">🚪 Logout</a>
+</div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>Welcome back, <%= teacherName %> 👋</h1>
+            <p>Here's an overview of your classes today</p>
+        </div>
+
+        <div class="profile">
+            <div class="avatar">UA</div>
+            <div>
+               <strong><%= user.name %></strong>
+<small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small>
+            </div>
+        </div>
+    </header>
+
+    <!-- QUICK STATS -->
+    <section class="stats">
+    <div class="card"><span class="icon">📚</span><div><p>My Classes</p><h2><%= classes.length %></h2></div></div>
+    <div class="card"><span class="icon">👨‍🎓</span><div><p>Total Students</p><h2><%= totalStudents %></h2></div></div>
+    <div class="card"><span class="icon">📊</span><div><p>Recent Results</p><h2><%= recentResults.length %></h2></div></div>
+    <div class="card"><span class="icon">📅</span><div><p>Avg. Attendance</p><h2><%= avgAttendance %>%</h2></div></div>
+</section>
+
+    <div class="dashboard-grid">
+
+        <!-- MY CLASSES -->
+        <div class="panel">
+    <div class="panel-header">
+        <h2>My Classes</h2>
+        <a href="/teacher/classes">View All</a>
+    </div>
+
+    <% classes.forEach((cls, i) => { %>
+        <div class="announcement" <% if (i === classes.length - 1) { %>style="border-bottom: none;"<% } %>>
+            <h3><%= cls.class_name %></h3>
+            <p><%= cls.courses %></p>
+        </div>
+    <% }); %>
+</div>
+
+        <!-- ATTENDANCE -->
+        <div class="panel">
+            <div class="panel-header">
+                <h2>Attendance Overview</h2>
+                <a href="/teacher/attendance">View All</a>
+            </div>
+
+            <div class="attendance">
+    <div class="attendance-number">
+        <h1><%= avgAttendance %>%</h1>
+        <p>Overall</p>
+    </div>
+    <div class="attendance-details">
+        <p>✅ Present: <%= presentRecords %> records</p>
+        <p>❌ Absent: <%= totalRecords - presentRecords %> records</p>
+    </div>
+</div>
+        </div>
+
+    </div>
+
+    <div class="dashboard-grid">
+
+        <!-- RECENT SUBMISSIONS -->
+       <div class="panel">
+    <div class="panel-header">
+        <h2>Recent Results</h2>
+        <a href="/teacher/results">View All</a>
+    </div>
+
+    <% recentResults.forEach((r, i) => { %>
+        <div class="announcement" <% if (i === recentResults.length - 1) { %>style="border-bottom: none;"<% } %>>
+            <h3><%= r.student_name %> — <%= r.course_name %></h3>
+            <p>Score: <%= r.score %>% · Grade: <%= r.grade %></p>
+        </div>
+    <% }); %>
+</div>
+
+        <!-- QUR'AN PROGRESS -->
+     
+
+    </div>
+
+    <!-- ANNOUNCEMENTS -->
+    <section class="panel">
+        <div class="panel-header">
+            <h2>Recent Announcements</h2>
+            <a href="/teacher/announcements">View All</a>
+        </div>
+
+        <div class="announcement">
+            <h3>School Meeting</h3>
+            <p>There will be a general staff meeting this Saturday at 10:00 AM in the main hall.</p>
+            <small>Yesterday</small>
+        </div>
+
+        <div class="announcement" style="border-bottom: none;">
+            <h3>Mid-Term Examination</h3>
+            <p>The mid-term examination will begin on Monday. Prepare accordingly.</p>
+            <small>2 hours ago</small>
+        </div>
+    </section>
+
+    <%- include("../partials/footer") %>
+</main>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

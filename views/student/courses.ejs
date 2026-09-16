@@ -1,0 +1,54 @@
+<%- include("../partials/header") %>
+<%- include("../partials/student-sidebar") %>
+
+<div class="logout">
+    <a href="/logout">🚪 Logout</a>
+</div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>My Courses</h1>
+            <p>Courses you're currently enrolled in</p>
+        </div>
+
+        <div class="profile">
+            <div class="avatar">YI</div>
+            <div>
+               <strong><%= user.name %></strong>
+<small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small>
+            </div>
+        </div>
+    </header>
+
+    <section class="panel">
+
+        <div class="classes-grid">
+    <% courses.forEach(course => { %>
+        <div class="class-card">
+            <div class="class-card-header">
+                <h3><%= course.course_name %></h3>
+                <span class="status active-status"><%= course.status %></span>
+            </div>
+            <div class="class-teacher">👤 <span><%= course.teacher_name %></span></div>
+            <div class="class-meta"><span>📚 Lessons: <strong><%= course.lessons_count %></strong></span></div>
+            <div class="course-progress">
+                <div class="course-progress-label"><span>Your Progress</span><span><%= course.progress %>%</span></div>
+                <div class="progress-bar"><div class="progress-fill" style="width: <%= course.progress %>%;"></div></div>
+            </div>
+            <div class="class-card-footer">
+                <button class="action-btn" onclick="viewCourseDetails('<%= course.course_name %>')">View Course</button>
+            </div>
+        </div>
+    <% }); %>
+</div>
+    </section>
+    <%- include("../partials/footer") %>
+</main>
+
+<script src="/js/app.js"></script>
+
+</body>
+</html>

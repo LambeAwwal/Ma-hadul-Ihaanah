@@ -1,0 +1,46 @@
+<%- include("../partials/header") %>
+<%- include("../partials/student-sidebar") %>
+
+<div class="logout">
+    <a href="/logout">🚪 Logout</a>
+</div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>My Profile</h1>
+            <p>Your personal and academic information</p>
+        </div>
+        <div class="profile">
+            <div class="avatar">YI</div>
+            <div><strong><%= user.name %></strong><small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small></div>
+        </div>
+    </header>
+
+    <section class="panel">
+        <div class="panel-header"><h2>Personal Information</h2></div>
+
+        <div class="form-grid">
+    <div class="form-group"><label>Full Name</label><input type="text" value="<%= student.full_name %>" readonly></div>
+    <div class="form-group"><label>Admission Number</label><input type="text" value="<%= student.admission_number %>" readonly></div>
+    <div class="form-group"><label>Class</label><input type="text" value="<%= student.class %>" readonly></div>
+    <div class="form-group"><label>Gender</label><input type="text" value="<%= student.gender %>" readonly></div>
+    <div class="form-group"><label>Date of Birth</label><input type="text" value="<%= student.date_of_birth ? new Date(student.date_of_birth).toDateString() : '' %>" readonly></div>
+    <div class="form-group"><label>Email</label><input type="email" value="<%= student.email %>" readonly></div>
+    <div class="form-group"><label>Parent/Guardian</label><input type="text" value="<%= student.parent_guardian_name %>" readonly></div>
+    <div class="form-group"><label>Parent Phone</label><input type="text" value="<%= student.parent_phone %>" readonly></div>
+    <div class="form-group full-width"><label>Address</label><input type="text" value="<%= student.address %>" readonly></div>
+</div>
+
+        <div class="form-actions">
+            <button class="save-btn" onclick="alert('Profile editing will be available once accounts are connected.')">Edit Profile</button>
+        </div>
+    </section>
+    <%- include("../partials/footer") %>
+</main>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

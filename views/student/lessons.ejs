@@ -1,0 +1,108 @@
+<%- include("../partials/header") %>
+<%- include("../partials/student-sidebar") %>
+
+<div class="logout">
+    <a href="/logout">🚪 Logout</a>
+</div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>Lessons</h1>
+            <p>Learning materials from your courses</p>
+        </div>
+
+        <div class="profile">
+            <div class="avatar">YI</div>
+            <div>
+                <strong><%= user.name %></strong>
+<small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small>
+            </div>
+        </div>
+    </header>
+
+    <section class="panel">
+
+        <div class="student-toolbar">
+            <div>
+                <h2>All Lessons</h2>
+                <p class="toolbar-description">Materials shared by your teachers</p>
+            </div>
+        </div>
+
+        <div class="student-filters">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="lessonSearch" placeholder="Search lessons..." onkeyup="searchLessons()">
+            </div>
+
+            <select id="lessonCourseFilter" onchange="filterLessons()">
+                <option value="all">All Courses</option>
+                <option>Arabic Language</option>
+                <option>Qur'an</option>
+                <option>Tajweed</option>
+                <option>Islamic Studies</option>
+            </select>
+        </div>
+
+        <div class="classes-grid" id="lessonsGrid">
+
+            <div class="class-card" data-course="Arabic Language">
+                <div class="class-card-header">
+                    <h3>Arabic Nouns & Pronouns</h3>
+                    <span class="status active-status">📄 PDF</span>
+                </div>
+                <div class="class-teacher">👤 <span>Ustadh Yasir</span></div>
+                <div class="class-meta"><span>Course: <strong>Arabic Language</strong></span></div>
+                <div class="class-card-footer">
+                    <button class="action-btn" onclick="openLesson('Arabic Nouns & Pronouns')">Open</button>
+                </div>
+            </div>
+
+            <div class="class-card" data-course="Qur'an">
+                <div class="class-card-header">
+                    <h3>Surah Al-Ma'idah Recitation</h3>
+                    <span class="status active-status">🎧 Audio</span>
+                </div>
+                <div class="class-teacher">👤 <span>Ustadh Abdulrahman</span></div>
+                <div class="class-meta"><span>Course: <strong>Qur'an</strong></span></div>
+                <div class="class-card-footer">
+                    <button class="action-btn" onclick="openLesson('Surah Al-Ma\'idah Recitation')">Open</button>
+                </div>
+            </div>
+
+            <div class="class-card" data-course="Tajweed">
+                <div class="class-card-header">
+                    <h3>Rules of Madd</h3>
+                    <span class="status active-status">🎬 Video</span>
+                </div>
+                <div class="class-teacher">👤 <span>Ustadh Abdulrahman</span></div>
+                <div class="class-meta"><span>Course: <strong>Tajweed</strong></span></div>
+                <div class="class-card-footer">
+                    <button class="action-btn" onclick="openLesson('Rules of Madd')">Open</button>
+                </div>
+            </div>
+
+            <div class="class-card" data-course="Islamic Studies">
+                <div class="class-card-header">
+                    <h3>The Five Pillars</h3>
+                    <span class="status active-status">📄 PDF</span>
+                </div>
+                <div class="class-teacher">👤 <span>Ustadhah Fatimah</span></div>
+                <div class="class-meta"><span>Course: <strong>Islamic Studies</strong></span></div>
+                <div class="class-card-footer">
+                    <button class="action-btn" onclick="openLesson('The Five Pillars')">Open</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <%- include("../partials/footer") %>
+</main>
+
+<script src="/js/app.js"></script>
+
+</body>
+</html>

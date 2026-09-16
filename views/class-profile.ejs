@@ -1,0 +1,77 @@
+<%- include("partials/header") %>
+<%- include("partials/sidebar") %>
+
+<div class="logout">
+    <a href="/logout">🚪 Logout</a>
+</div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1><%= cls.class_name %></h1>
+            <p>Class Details</p>
+        </div>
+
+        <div class="profile">
+            <div class="avatar"><%= user.name.charAt(0).toUpperCase() %></div>
+            <div>
+                <strong><%= user.name %></strong>
+                <small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small>
+            </div>
+        </div>
+    </header>
+
+    <section class="stats">
+        <div class="card"><span class="icon">👤</span><div><p>Class Teacher</p><h2 style="font-size:16px;"><%= cls.teacher_name %></h2></div></div>
+        <div class="card"><span class="icon">👨‍🎓</span><div><p>Students</p><h2><%= students.length %></h2></div></div>
+        <div class="card"><span class="icon">📅</span><div><p>Schedule</p><h2 style="font-size:14px;"><%= cls.schedule %></h2></div></div>
+        <div class="card"><span class="icon"><%= cls.status === 'Active' ? '✅' : '⏸️' %></span><div><p>Status</p><h2><%= cls.status %></h2></div></div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header"><h2>Class Information</h2></div>
+
+        <div class="form-grid">
+            <div class="form-group"><label>Class Name</label><input type="text" value="<%= cls.class_name %>" readonly></div>
+            <div class="form-group"><label>Teacher</label><input type="text" value="<%= cls.teacher_name %>" readonly></div>
+            <div class="form-group"><label>Schedule</label><input type="text" value="<%= cls.schedule %>" readonly></div>
+            <div class="form-group"><label>Capacity</label><input type="text" value="<%= cls.capacity || 'Not set' %>" readonly></div>
+            <div class="form-group full-width"><label>Courses</label><input type="text" value="<%= cls.courses %>" readonly></div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header"><h2>Enrolled Students</h2></div>
+
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Student</th><th>Admission No.</th><th>Gender</th><th>Attendance</th><th>Status</th></tr></thead>
+                <tbody>
+                    <% if (students.length === 0) { %>
+                        <tr><td colspan="5">No students enrolled in this class yet.</td></tr>
+                    <% } %>
+                    <% students.forEach(s => { %>
+                        <tr>
+                            <td><%= s.full_name %></td>
+                            <td><%= s.admission_number %></td>
+                            <td><%= s.gender %></td>
+                            <td><%= s.attendance %>%</td>
+                            <td><span class="status active-status"><%= s.status %></span></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <a href="/classes" class="cancel-btn" style="display:inline-block; text-decoration:none; margin-top: 10px;">← Back to Classes</a>
+
+    <%- include("partials/footer") %>
+</main>
+
+<script src="/js/app.js"></script>
+
+</body>
+</html>

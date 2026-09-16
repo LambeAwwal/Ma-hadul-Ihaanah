@@ -1,0 +1,179 @@
+<%- include("partials/header") %>
+<%- include("partials/sidebar") %>
+
+<div class="logout">
+    <a href="/logout">🚪 Logout</a>
+</div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>Announcements</h1>
+            <p>Share updates with students, teachers, or the whole school</p>
+        </div>
+
+        <div class="profile">
+            <div class="avatar">A</div>
+            <div>
+                <strong><%= user.name %></strong>
+<small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small>
+            </div>
+        </div>
+    </header>
+
+    <!-- ANNOUNCEMENT STATISTICS -->
+    <section class="stats">
+
+    <div class="card">
+        <span class="icon">📢</span>
+        <div>
+            <p>Total Announcements</p>
+            <h2><%= totalAnnouncements %></h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <span class="icon">🌍</span>
+        <div>
+            <p>Sent to Everyone</p>
+            <h2><%= sentToEveryone %></h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <span class="icon">👨‍🎓</span>
+        <div>
+            <p>For Students</p>
+            <h2><%= forStudents %></h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <span class="icon">👨‍🏫</span>
+        <div>
+            <p>For Teachers</p>
+            <h2><%= forTeachers %></h2>
+        </div>
+    </div>
+
+</section>
+
+    <!-- ANNOUNCEMENTS MANAGEMENT -->
+    <section class="panel">
+
+        <div class="student-toolbar">
+            <div>
+                <h2>All Announcements</h2>
+                <p class="toolbar-description">View and manage posted announcements</p>
+            </div>
+
+            <button class="add-student-btn" onclick="openAnnouncementModal()">
+                + New Announcement
+            </button>
+        </div>
+
+        <!-- SEARCH + FILTER -->
+        <div class="student-filters">
+
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="announcementSearch"
+                       placeholder="Search announcements..."
+                       onkeyup="searchAnnouncements()">
+            </div>
+
+            <select id="audienceFilter" onchange="filterAnnouncements()">
+                <option value="all">All Audiences</option>
+                <option>All Students</option>
+                <option>All Teachers</option>
+                <option>Everyone</option>
+                <option>Specific Class</option>
+            </select>
+
+        </div>
+
+        <!-- ANNOUNCEMENTS LIST -->
+        <div id="announcementsList">
+
+    <% announcements.forEach(a => { %>
+    <div class="announcement">
+        <div class="announcement-top">
+            <h3><%= a.title %></h3>
+            <span class="audience-tag"><%= a.audience %></span>
+        </div>
+        <p><%= a.message %></p>
+        <small>Posted by <%= a.posted_by %> · <%= a.posted_ago %></small>
+    </div>
+<% }); %>
+
+</div>
+    </section>
+    <%- include("partials/footer") %>
+</main>
+
+<!-- NEW ANNOUNCEMENT MODAL -->
+<div class="modal-overlay" id="announcementModal">
+
+    <div class="student-modal">
+
+        <div class="modal-header">
+            <div>
+                <h2>New Announcement</h2>
+                <p>Post an update to students, teachers, or everyone</p>
+            </div>
+
+            <button class="close-modal" onclick="closeAnnouncementModal()">×</button>
+        </div>
+
+       <form method="POST" action="/announcements">
+
+    <div class="form-grid">
+
+        <div class="form-group full-width">
+            <label>Title</label>
+            <input type="text" name="title" placeholder="Announcement title" required>
+        </div>
+
+        <div class="form-group full-width">
+            <label>Message</label>
+            <textarea name="message" placeholder="Write the announcement message" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Audience</label>
+            <select name="audience" required>
+                <option value="">Select audience</option>
+                <option>Everyone</option>
+                <option>All Students</option>
+                <option>All Teachers</option>
+                <option>Specific Class</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Class (if specific)</label>
+            <select>
+    <option value="">Not applicable</option>
+    <% classes.forEach(c => { %>
+        <option><%= c.class_name %></option>
+    <% }); %>
+</select>
+        </div>
+
+    </div>
+
+    <div class="form-actions">
+        <button type="button" class="cancel-btn" onclick="closeAnnouncementModal()">Cancel</button>
+        <button type="submit" class="save-btn">Post Announcement</button>
+    </div>
+
+</form>
+    </div>
+</div>
+
+<script src="/js/app.js"></script>
+
+</body>
+</html>

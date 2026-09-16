@@ -1,0 +1,174 @@
+
+ <%- include("partials/header") %>
+
+       <%- include("partials/sidebar") %>
+
+       <div class="logout">
+    <a href="/logout">🚪 Logout</a>
+</div>
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+
+            <div>
+                <h1>Dashboard</h1>
+                <p>Welcome back, Admin</p>
+            </div>
+
+            <div class="profile">
+                <div class="avatar">A</div>
+
+                <div>
+                  <strong><%= user.name %></strong>
+<small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small>
+                </div>
+            </div>
+
+        </header>
+
+
+        <!-- STATISTICS -->
+        <section class="stats">
+
+    <div class="card">
+        <span class="icon">👨‍🎓</span>
+        <div>
+            <p>Total Students</p>
+            <h2><%= totalStudents %></h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <span class="icon">👨‍🏫</span>
+        <div>
+            <p>Total Teachers</p>
+            <h2><%= totalTeachers %></h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <span class="icon">📚</span>
+        <div>
+            <p>Total Courses</p>
+            <h2><%= totalCourses %></h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <span class="icon">🏫</span>
+        <div>
+            <p>Total Classes</p>
+            <h2><%= totalClasses %></h2>
+        </div>
+    </div>
+
+</section>
+
+
+        <!-- CONTENT GRID -->
+        <section class="dashboard-grid">
+
+            <!-- ATTENDANCE -->
+         <div class="panel">
+
+    <div class="panel-header">
+        <h2>Today's Attendance</h2>
+        <a href="/attendance">View Details</a>
+    </div>
+
+
+    <div class="attendance">
+
+        <div class="attendance-number">
+            <h1><%= attendancePercent %>%</h1>
+            <p>Attendance Rate</p>
+        </div>
+
+        <div class="attendance-details">
+            <p>Present: <strong><%= present %></strong></p>
+            <p>Absent: <strong><%= absent %></strong></p>
+        </div>
+
+    </div>
+
+</div>
+
+
+            <!-- ANNOUNCEMENTS -->
+<div class="panel">
+
+    <div class="panel-header">
+        <h2>Announcements</h2>
+        <a href="/announcements">View All</a>
+    </div>
+
+    <% announcements.forEach((a, i) => { %>
+        <div class="announcement" <% if (i === announcements.length - 1) { %>style="border-bottom: none;"<% } %>>
+            <h3><%= a.title %></h3>
+            <p><%= a.message %></p>
+            <small>Posted <%= a.posted_ago %></small>
+        </div>
+    <% }); %>
+
+</div>
+
+        </section>
+
+
+        <!-- RECENT STUDENTS --><section class="panel">
+
+    <div class="panel-header">
+        <h2>Recent Students</h2>
+        <a href="/students">View All</a>
+    </div>
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Admission No.</th>
+                    <th>Class</th>
+                    <th>Attendance</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <% recentStudents.forEach(student => { %>
+                    <tr>
+                        <td><%= student.full_name %></td>
+                        <td><%= student.admission_number %></td>
+                        <td><%= student.class %></td>
+                        <td><%= student.attendance %>%</td>
+                        <td>
+                            <span class="status active-status">
+                                <%= student.status %>
+                            </span>
+                        </td>
+                    </tr>
+                <% }); %>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+<%- include("partials/footer") %>
+    </main>
+
+
+    <script src="/js/app.js"></script>
+
+</body>
+</html>

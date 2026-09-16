@@ -1,0 +1,81 @@
+<%- include("../partials/header") %>
+<%- include("../partials/teacher-sidebar") %>
+
+<div class="logout">
+   <a href="/logout">🚪 Logout</a>
+</div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>Announcements</h1>
+            <p>School updates and messages you've posted</p>
+        </div>
+        <div class="profile">
+            <div class="avatar">UA</div>
+            <div>
+                <strong><%= user.name %></strong>
+                <small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small>
+            </div>
+        </div>
+    </header>
+
+    <section class="panel">
+        <div class="student-toolbar">
+            <div>
+               <% announcements.forEach(a => { %>
+    <div class="announcement" data-audience="<%= a.audience %>">
+        <div class="announcement-top">
+            <h3><%= a.title %></h3>
+            <span class="audience-tag"><%= a.audience %></span>
+        </div>
+        <p><%= a.message %></p>
+        <small>Posted by <%= a.posted_by %> · <%= a.posted_ago %></small>
+    </div>
+<% }); %>
+            </div>
+            <button class="add-student-btn" onclick="openAnnouncementModal()">+ New Announcement</button>
+        </div>
+    </section>
+</main>
+
+<!-- NEW ANNOUNCEMENT MODAL -->
+<div class="modal-overlay" id="announcementModal">
+    <div class="student-modal">
+        <div class="modal-header">
+            <div><h2>New Announcement</h2><p>Post an update to your students</p></div>
+            <button class="close-modal" onclick="closeAnnouncementModal()">×</button>
+        </div>
+       <form method="POST" action="/teacher/announcements">
+    <div class="form-grid">
+        <div class="form-group full-width">
+            <label>Title</label>
+            <input type="text" name="title" placeholder="Announcement title" required>
+        </div>
+        <div class="form-group full-width">
+            <label>Message</label>
+            <textarea name="message" placeholder="Write the announcement message" required></textarea>
+        </div>
+        <div class="form-group full-width">
+            <label>Audience</label>
+            <select name="audience" required>
+                <option>Intermediate 1</option>
+                <option>Advanced</option>
+                <option>Both My Classes</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-actions">
+        <button type="button" class="cancel-btn" onclick="closeAnnouncementModal()">Cancel</button>
+        <button type="submit" class="save-btn">Post Announcement</button>
+    </div>
+</form>
+    </div>
+</div>
+
+<%- include("../partials/footer") %>
+<script src="/js/app.js"></script>
+</body>
+</html>

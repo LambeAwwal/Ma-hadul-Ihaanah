@@ -1,0 +1,56 @@
+<%- include("../partials/header") %>
+<%- include("../partials/student-sidebar") %>
+
+<div class="logout">
+    <a href="/logout">🚪 Logout</a>
+</div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>Announcements</h1>
+            <p>Updates from the management</p>
+        </div>
+        <div class="profile">
+            <div class="avatar">YI</div>
+            <strong><%= user.name %></strong>
+<small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small>
+        </div>
+    </header>
+
+    <section class="panel">
+        <div class="announcement">
+            <div class="announcement-top">
+                <h3>Mid-Term Examination</h3>
+                <span class="audience-tag">Everyone</span>
+            </div>
+            <p>The mid-term examination will begin on Monday. Prepare accordingly.</p>
+            <small>Posted by Administrator · 2 hours ago</small>
+        </div>
+
+        <div class="announcement">
+            <div class="announcement-top">
+                <h3>Qur'an Recitation Competition</h3>
+                <span class="audience-tag">All Students</span>
+            </div>
+            <p>Registration is now open. Speak with your class teacher to sign up.</p>
+            <small>Posted by Ustadh Abdulrahman · 2 days ago</small>
+        </div>
+
+        <div class="announcement" style="border-bottom: none;">
+            <div class="announcement-top">
+                <h3>Public Holiday</h3>
+                <span class="audience-tag">All Students</span>
+            </div>
+            <p>The school will be closed next Friday. Classes resume the following week.</p>
+            <small>Posted by Administrator · 3 days ago</small>
+        </div>
+    </section>
+    <%- include("../partials/footer") %>
+</main>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<%- include("../partials/header") %>
+<%- include("../partials/teacher-sidebar") %>
+
+<div class="logout">
+   <a href="/logout">🚪 Logout</a>
+</div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>My Classes</h1>
+            <p>Classes assigned to you</p>
+        </div>
+        <div class="profile">
+            <div class="avatar">UA</div>
+            <strong><%= user.name %></strong>
+<small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small>
+        </div>
+    </header>
+
+    <section class="panel">
+     <div class="classes-grid">
+    <% classes.forEach(cls => { %>
+        <div class="class-card">
+            <div class="class-card-header">
+                <h3><%= cls.class_name %></h3>
+                <span class="status active-status"><%= cls.status %></span>
+            </div>
+            <div class="class-meta">
+                <span>👨‍🎓 Students: <strong><%= cls.student_count %></strong></span>
+                <span>📅 Schedule: <strong><%= cls.schedule %></strong></span>
+            </div>
+            <div class="class-courses">
+                <% cls.courses.split(",").forEach(course => { %>
+                    <span class="course-tag"><%= course.trim() %></span>
+                <% }); %>
+            </div>
+            <div class="class-card-footer">
+                <button class="action-btn" onclick="viewClass('<%= cls.class_name %>')">View</button>
+            </div>
+        </div>
+    <% }); %>
+</div>
+    </section>
+    <%- include("../partials/footer") %>
+</main>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

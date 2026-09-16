@@ -1,0 +1,258 @@
+<%- include("partials/header") %>
+<%- include("partials/sidebar") %>
+
+<div class="logout">
+    <a href="/logout">🚪 Logout</a>
+</div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>Students</h1>
+            <p>Manage and monitor all students</p>
+        </div>
+
+        <div class="profile">
+            <div class="avatar">A</div>
+            <div>
+               <strong><%= user.name %></strong>
+<small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small>
+            </div>
+        </div>
+    </header>
+
+    <!-- STUDENT STATISTICS -->
+    <section class="stats">
+
+    <div class="card">
+        <span class="icon">🎓</span>
+        <div>
+            <p>Total Students</p>
+            <h2><%= totalStudents %></h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <span class="icon">✅</span>
+        <div>
+            <p>Active Students</p>
+            <h2><%= activeStudents %></h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <span class="icon">⏸️</span>
+        <div>
+            <p>Inactive Students</p>
+            <h2><%= inactiveStudents %></h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <span class="icon">🏫</span>
+        <div>
+            <p>Classes</p>
+            <h2><%= totalClasses %></h2>
+        </div>
+    </div>
+
+</section>
+
+    <!-- STUDENT MANAGEMENT -->
+    <section class="panel">
+
+        <div class="student-toolbar">
+            <div>
+                <h2>All Students</h2>
+                <p class="toolbar-description">View and manage registered students</p>
+            </div>
+
+            <button class="add-student-btn" onclick="openStudentModal()">
+                + Add Student
+            </button>
+        </div>
+
+        <!-- SEARCH + FILTER -->
+        <div class="student-filters">
+
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="studentSearch"
+                       placeholder="Search student..."
+                       onkeyup="searchStudents()">
+            </div>
+
+            <select id="classFilter" onchange="filterStudents()">
+                <option value="all">All Classes</option>
+                <option>Beginner 1</option>
+                <option>Beginner 2</option>
+                <option>Intermediate 1</option>
+                <option>Intermediate 2</option>
+                <option>Advanced</option>
+            </select>
+
+            <select>
+                <option>All Status</option>
+                <option>Active</option>
+                <option>Inactive</option>
+            </select>
+
+        </div>
+
+        <!-- STUDENT TABLE -->
+        <div class="table-container">
+            <table id="studentsTable">
+
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Admission No.</th>
+                        <th>Class</th>
+                        <th>Gender</th>
+                        <th>Attendance</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+<tbody>
+
+    <% students.forEach(student => { %>
+
+        <tr>
+            <td>
+                <div class="student-name">
+                    <div class="student-avatar">
+                        <%= student.full_name.split(" ").map(n => n[0]).join("").toUpperCase() %>
+                    </div>
+                    <div>
+                        <strong><%= student.full_name %></strong>
+                        <small><%= student.email %></small>
+                    </div>
+                    <div class="form-group">
+   
+                </div>
+            </td>
+            <td><%= student.admission_number %></td>
+            <td><%= student.class %></td>
+            <td><%= student.gender %></td>
+            <td><%= student.attendance %>%</td>
+            <td><span class="status active-status"><%= student.status %></span></td>
+            <td>
+               <a class="action-btn" href="/students/<%= student.id %>" style="text-decoration:none; display:inline-block;">
+    View
+</a>
+            </td>
+        </tr>
+
+    <% }); %>
+
+</tbody>
+            </table>
+        </div>
+    </section>
+    <%- include("partials/footer") %>
+</main>
+
+<!-- ADD STUDENT MODAL -->
+<div class="modal-overlay" id="studentModal">
+
+    <div class="student-modal">
+
+        <div class="modal-header">
+            <div>
+                <h2>Add New Student</h2>
+                <p>Register a new student</p>
+            </div>
+
+            <button class="close-modal"
+                    onclick="closeStudentModal()">×</button>
+        </div>
+
+        <form method="POST" action="/students">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text"
+                           name="full_name"
+                           placeholder="Enter full name"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email"
+                           name="email"
+                           placeholder="student@example.com">
+                </div>
+
+                 <label>Password</label>
+    <input type="password" name="password" placeholder="Set login password" required minlength="6">
+</div>
+
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select name="gender" required>
+                        <option value="">Select gender</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Class</label>
+                    <select name="class" required>
+                        <option value="">Select class</option>
+                        <option>Beginner 1</option>
+                        <option>Beginner 2</option>
+                        <option>Intermediate 1</option>
+                        <option>Intermediate 2</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" name="date_of_birth">
+                </div>
+
+                <div class="form-group">
+                    <label>Parent/Guardian Name</label>
+                    <input type="text" name="parent_guardian_name" placeholder="Parent's name">
+                </div>
+
+                <div class="form-group">
+                    <label>Parent Phone</label>
+                    <input type="tel" name="parent_phone" placeholder="08012345678">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Address</label>
+                    <textarea name="address" placeholder="Student's address"></textarea>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="button"
+                        class="cancel-btn"
+                        onclick="closeStudentModal()">
+                    Cancel
+                </button>
+
+                <button type="submit" class="save-btn">
+                    Save Student
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script src="/js/app.js"></script>
+
+</body>
+</html>

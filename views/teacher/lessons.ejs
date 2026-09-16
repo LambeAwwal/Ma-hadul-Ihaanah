@@ -1,0 +1,76 @@
+<%- include("../partials/header") %>
+<%- include("../partials/teacher-sidebar") %>
+
+<div class="logout">
+    <a href="/logout">🚪 Logout</a>
+</div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>Lessons</h1>
+            <p>Upload and manage materials for your classes</p>
+        </div>
+        <div class="profile">
+            <div class="avatar">UA</div>
+            <strong><%= user.name %></strong>
+<small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small>
+        </div>
+    </header>
+
+    <section class="panel">
+        <div class="student-toolbar">
+            <div>
+                <h2>All Lessons</h2>
+                <p class="toolbar-description">Materials you've shared with your classes</p>
+            </div>
+            <button class="add-student-btn" onclick="alert('Lesson upload coming once file storage is added.')">
+                + Upload Lesson
+            </button>
+        </div>
+
+        <div class="classes-grid">
+
+            <div class="class-card">
+                <div class="class-card-header">
+                    <h3>Surah Al-Ma'idah Recitation</h3>
+                    <span class="status active-status">🎧 Audio</span>
+                </div>
+                <div class="class-meta"><span>Class: <strong>Intermediate 1</strong></span></div>
+                <div class="class-card-footer">
+                    <button class="action-btn" onclick="openLesson('Surah Al-Ma\'idah Recitation')">Open</button>
+                </div>
+            </div>
+
+            <div class="class-card">
+                <div class="class-card-header">
+                    <h3>Rules of Madd</h3>
+                    <span class="status active-status">🎬 Video</span>
+                </div>
+                <div class="class-meta"><span>Class: <strong>Intermediate 1</strong></span></div>
+                <div class="class-card-footer">
+                    <button class="action-btn" onclick="openLesson('Rules of Madd')">Open</button>
+                </div>
+            </div>
+
+            <div class="class-card">
+                <div class="class-card-header">
+                    <h3>Fiqh of Salah</h3>
+                    <span class="status active-status">📄 PDF</span>
+                </div>
+                <div class="class-meta"><span>Class: <strong>Advanced</strong></span></div>
+                <div class="class-card-footer">
+                    <button class="action-btn" onclick="openLesson('Fiqh of Salah')">Open</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <%- include("../partials/footer") %>
+</main>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

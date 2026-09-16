@@ -1,0 +1,138 @@
+<%- include("../partials/header") %>
+<%- include("../partials/student-sidebar") %>
+
+<div class="logout">
+    <a href="/logout">🚪 Logout</a>
+</div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>Welcome back, <%= studentName %> 👋</h1>
+            <p>Here's what's happening with your studies today</p>
+        </div>
+
+        <div class="profile">
+            <div class="avatar">YI</div>
+            <div>
+                <strong><%= user.name %></strong>
+                <small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small>
+            </div>
+        </div>
+    </header>
+
+    <!-- QUICK STATS -->
+        <section class="stats">
+    <div class="card"><span class="icon">📚</span><div><p>Enrolled Courses</p><h2><%= studentClass ? studentClass.courses.split(",").length : 0 %></h2></div></div>
+    <div class="card"><span class="icon">📝</span><div><p>Results Recorded</p><h2><%= recentResults.length %></h2></div></div>
+    <div class="card">
+    <span class="icon">📅</span>
+    <div>
+        <p>Attendance</p>
+        <h2><%= attendancePercent %>%</h2>
+    </div>
+</div>
+</section>
+
+    <div class="dashboard-grid">
+
+        <!-- MY COURSES -->
+       <div class="panel">
+    <div class="panel-header">
+        <h2>My Courses</h2>
+        <a href="/student/courses">View All</a>
+    </div>
+
+    <% if (studentClass) { %>
+        <% const courseList = studentClass.courses.split(","); %>
+        <% courseList.forEach((course, i) => { %>
+            <div class="announcement" <% if (i === courseList.length - 1) { %>style="border-bottom: none;"<% } %>>
+                <h3><%= course.trim() %></h3>
+                <p>Taught by <%= studentClass.teacher_name %></p>
+            </div>
+        <% }); %>
+    <% } %>
+</div>
+
+        <!-- ATTENDANCE -->
+        <div class="panel">
+    <div class="panel-header">
+        <h2>My Attendance</h2>
+        <a href="/student/attendance">View All</a>
+    </div>
+
+    <div class="attendance">
+        <div class="attendance-number">
+            <h1><%= attendancePercent %>%</h1>
+            <p>This Term</p>
+        </div>
+    </div>
+</div>
+
+    <div class="dashboard-grid">
+
+        <!-- PENDING ASSIGNMENTS -->
+        <div class="panel">
+            <div class="panel-header">
+                <h2>Pending Assignments</h2>
+                <a href="/student/assignments">View All</a>
+            </div>
+
+            <div class="announcement">
+                <h3>Tajweed Rules Worksheet</h3>
+                <p>Course: Tajweed · Due in 3 days</p>
+            </div>
+
+            <div class="announcement" style="border-bottom: none;">
+                <h3>Arabic Grammar Exercise 4</h3>
+                <p>Course: Arabic Language · Due in 6 days</p>
+            </div>
+        </div>
+
+        <!-- RECENT RESULTS -->
+        <div class="panel">
+    <div class="panel-header">
+        <h2>Recent Results</h2>
+        <a href="/student/results">View All</a>
+    </div>
+
+    <% recentResults.forEach((r, i) => { %>
+        <div class="announcement" <% if (i === recentResults.length - 1) { %>style="border-bottom: none;"<% } %>>
+            <h3><%= r.course_name %> — <%= r.exam_type %></h3>
+            <p>Score: <%= r.score %>% · Grade: <%= r.grade %></p>
+        </div>
+    <% }); %>
+</div>
+
+    <!-- QUR'AN PROGRESS SNAPSHOT -->
+
+
+    <!-- ANNOUNCEMENTS -->
+    <section class="panel">
+        <div class="panel-header">
+            <h2>Recent Announcements</h2>
+            <a href="/student/announcements">View All</a>
+        </div>
+
+        <div class="announcement">
+            <h3>Mid-Term Examination</h3>
+            <p>The mid-term examination will begin on Monday. Prepare accordingly.</p>
+            <small>2 hours ago</small>
+        </div>
+
+        <div class="announcement" style="border-bottom: none;">
+            <h3>Qur'an Recitation Competition</h3>
+            <p>Registration is now open. Speak with your class teacher to sign up.</p>
+            <small>2 days ago</small>
+        </div>
+    </section>
+
+    <%- include("../partials/footer") %>
+</main>
+
+<script src="/js/app.js"></script>
+
+</body>
+</html>

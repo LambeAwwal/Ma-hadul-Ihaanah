@@ -1,0 +1,145 @@
+<%- include("partials/header") %>
+<%- include("partials/sidebar") %>
+
+<div class="logout">
+    <a href="/logout">🚪 Logout</a>
+</div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>Attendance</h1>
+            <p>Mark and monitor daily student attendance</p>
+        </div>
+
+        <div class="profile">
+            <div class="avatar">A</div>
+            <div>
+                <strong><%= user.name %></strong>
+<small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small>
+            </div>
+        </div>
+    </header>
+
+    <!-- ATTENDANCE STATISTICS -->
+    <section class="stats">
+
+        <div class="card">
+            <span class="icon">👨‍🎓</span>
+            <div>
+                <p>Total Students</p>
+                <h2 id="statTotal">6</h2>
+            </div>
+        </div>
+
+        <div class="card">
+            <span class="icon">✅</span>
+            <div>
+                <p>Present</p>
+                <h2 id="statPresent">4</h2>
+            </div>
+        </div>
+
+        <div class="card">
+            <span class="icon">❌</span>
+            <div>
+                <p>Absent</p>
+                <h2 id="statAbsent">1</h2>
+            </div>
+        </div>
+
+        <div class="card">
+            <span class="icon">⏰</span>
+            <div>
+                <p>Late</p>
+                <h2 id="statLate">1</h2>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ATTENDANCE REGISTER -->
+    <section class="panel">
+
+        <div class="student-toolbar">
+            <div>
+                <h2>Daily Register</h2>
+                <p class="toolbar-description">Select a class and date to mark attendance</p>
+            </div>
+
+            <button class="add-student-btn" onclick="saveAttendance()">
+                💾 Save Attendance
+            </button>
+        </div>
+
+        <!-- CLASS + DATE SELECTORS -->
+        <div class="student-filters">
+
+            <select id="attendanceClassFilter" onchange="filterAttendanceClass()">
+                <option value="all">All Classes</option>
+                <option>Beginner 1</option>
+                <option>Beginner 2</option>
+                <option>Intermediate 1</option>
+                <option>Intermediate 2</option>
+                <option>Advanced</option>
+            </select>
+
+            <input type="date" id="attendanceDate" class="date-input" value="<%= new Date().toISOString().split('T')[0] %>">
+
+        </div>
+
+        <!-- ATTENDANCE TABLE -->
+        <div class="table-container">
+            <table id="attendanceTable">
+
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Admission No.</th>
+                        <th>Class</th>
+                        <th>Attendance</th>
+                    </tr>
+                </thead>
+
+               <tbody>
+
+    <% students.forEach(student => { %>
+
+        <tr data-class="<%= student.class %>"
+            data-student-id="<%= student.id %>"
+            data-admission="<%= student.admission_number %>">
+            <td>
+                <div class="student-name">
+                    <div class="student-avatar">
+                        <%= student.full_name.split(" ").map(n => n[0]).join("").toUpperCase() %>
+                    </div>
+                    <div><strong><%= student.full_name %></strong></div>
+                </div>
+            </td>
+            <td><%= student.admission_number %></td>
+            <td><%= student.class %></td>
+            <td>
+                <div class="attendance-toggle" data-status="Present">
+                    <button class="att-btn present active" onclick="markAttendance(this,'Present')">Present</button>
+                    <button class="att-btn absent" onclick="markAttendance(this,'Absent')">Absent</button>
+                    <button class="att-btn late" onclick="markAttendance(this,'Late')">Late</button>
+                </div>
+            </td>
+        </tr>
+
+    <% }); %>
+
+</tbody>
+            </table>
+        </div>
+    </section>
+    <%- include("partials/footer") %>
+</main>
+
+<script>const attendanceEndpoint = "/attendance";</script>
+<script src="/js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<%- include("../partials/header") %>
+<%- include("../partials/student-sidebar") %>
+
+<div class="logout">
+    <a href="/logout">🚪 Logout</a>
+</div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>My Attendance</h1>
+            <p>Your attendance record this term</p>
+        </div>
+        <div class="profile">
+            <div class="avatar">YI</div>
+            <strong><%= user.name %></strong>
+<small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small>
+        </div>
+    </header>
+
+    <section class="panel">
+    <div class="panel-header"><h2>Term Overview</h2></div>
+    <div class="attendance">
+        <div class="attendance-number">
+    <h1><%= attendancePercent %>%</h1>
+    <p>This Term</p>
+</div>
+        <div class="attendance-details">
+            <p>✅ Present: <%= present %> days</p>
+            <p>❌ Absent: <%= absent %> days</p>
+            <p>⏰ Late: <%= late %> days</p>
+        </div>
+    </div>
+</section>
+
+<section class="panel">
+    <div class="panel-header"><h2>Recent Attendance</h2></div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>Date</th><th>Class</th><th>Status</th></tr></thead>
+            <tbody>
+                <% records.forEach(r => { %>
+                    <tr>
+                        <td><%= new Date(r.attendance_date).toDateString() %></td>
+                        <td><%= r.class %></td>
+                        <td>
+                            <% if (r.status === "Present") { %>
+                                <span class="status active-status">Present</span>
+                            <% } else if (r.status === "Late") { %>
+                                <span class="grade grade-c">Late</span>
+                            <% } else { %>
+                                <span class="grade grade-d">Absent</span>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+</section>
+    <%- include("../partials/footer") %>
+</main>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

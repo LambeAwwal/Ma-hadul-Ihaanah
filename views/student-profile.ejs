@@ -49,8 +49,7 @@
                     <option <%= student.gender === 'Female' ? 'selected' : '' %>>Female</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label>Class</label>
+            
                <div class="form-group">
     <label>Class</label>
     <select name="class" required>
@@ -59,7 +58,6 @@
         <% }); %>
     </select>
 </div>
-            </div>
             <div class="form-group">
                 <label>Date of Birth</label>
                 <input type="date" name="date_of_birth" value="<%= student.date_of_birth ? student.date_of_birth.toISOString().split('T')[0] : '' %>">

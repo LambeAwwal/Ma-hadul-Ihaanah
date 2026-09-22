@@ -408,6 +408,36 @@ app.post("/classes/:id/delete", requireLogin("admin"), async (req, res) => {
     }
 });
 
+app.get("/courses/:id", requireLogin("admin"), async (req, res) => {
+    try {
+        const result = await pool.query("SELECT * FROM courses WHERE id = $1", [req.params.id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).send("Course not found");
+        }
+
+        const course = result.rows[0];
+
+        const classesResult = await pool.query(
+            "SELECT * FROM classes WHERE courses ILIKE '%' || $1 || '%'", [course.course_name]
+        );
+
+        const classNames = classesResult.rows.map(c => c.class_name);
+        const studentsResult = await pool.query(
+            "SELECT * FROM students WHERE class = ANY($1) ORDER BY id", [classNames]
+        );
+
+        res.render("course-profile", {
+            course,
+            classes: classesResult.rows,
+            students: studentsResult.rows
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error loading course");
+    }
+});
+
 app.post("/courses/:id/edit", requireLogin("admin"), async (req, res) => {
     try {
         const { course_name, teacher_name, lessons_count, progress, status } = req.body;

@@ -118,10 +118,19 @@
                 <% }); %>
             </div>
 
-            <div class="class-card-footer" style="gap: 8px;">
+        <div class="class-card-footer" style="gap: 8px;">
     <a class="action-btn" href="/classes/<%= cls.id %>" style="text-decoration:none;">View</a>
-    <button class="action-btn" onclick="openEditClassModal(<%= cls.id %>, '<%= cls.class_name %>', '<%= cls.teacher_name %>', '<%= cls.schedule %>', '<%= cls.courses %>', <%= cls.capacity || 0 %>, '<%= cls.status %>')">Edit</button>
-    <button class="action-btn" style="background:#fee2e2; color:#991b1b; border-color:#fee2e2;" onclick="confirmDeleteClass(<%= cls.id %>, '<%= cls.class_name %>')">Delete</button>
+    <button class="action-btn edit-class-btn"
+            data-id="<%= cls.id %>"
+            data-name="<%= cls.class_name %>"
+            data-teacher="<%= cls.teacher_name %>"
+            data-schedule="<%= cls.schedule %>"
+            data-courses="<%= cls.courses %>"
+            data-capacity="<%= cls.capacity || 0 %>"
+            data-status="<%= cls.status %>">Edit</button>
+    <button class="action-btn delete-class-btn" style="background:#fee2e2; color:#991b1b; border-color:#fee2e2;"
+            data-id="<%= cls.id %>"
+            data-name="<%= cls.class_name %>">Delete</button>
 </div>
         </div>
 

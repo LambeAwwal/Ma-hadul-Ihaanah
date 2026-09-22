@@ -638,6 +638,26 @@ function openEditClassModal(id, name, teacher, schedule, courses, capacity, stat
     document.getElementById("editClassModal").classList.add("show");
 }
 
+document.querySelectorAll(".edit-class-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        openEditClassModal(
+            btn.dataset.id,
+            btn.dataset.name,
+            btn.dataset.teacher,
+            btn.dataset.schedule,
+            btn.dataset.courses,
+            btn.dataset.capacity,
+            btn.dataset.status
+        );
+    });
+});
+
+document.querySelectorAll(".delete-class-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        confirmDeleteClass(btn.dataset.id, btn.dataset.name);
+    });
+});
+
 function closeEditClassModal() {
     document.getElementById("editClassModal").classList.remove("show");
 }
@@ -660,6 +680,27 @@ function openEditCourseModal(id, name, teacher, lessons, progress, status) {
     document.getElementById("editCourseModal").classList.add("show");
 }
 
+document.querySelectorAll(".edit-course-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        openEditCourseModal(
+            btn.dataset.id,
+            btn.dataset.name,
+            btn.dataset.teacher,
+            btn.dataset.lessons,
+            btn.dataset.progress,
+            btn.dataset.status
+        );
+    });
+});
+
+document.querySelectorAll(".delete-course-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        confirmDeleteCourse(btn.dataset.id, btn.dataset.name);
+    });
+});
+
+
+
 function closeEditCourseModal() {
     document.getElementById("editCourseModal").classList.remove("show");
 }
@@ -670,4 +711,16 @@ function confirmDeleteCourse(id, name) {
         form.action = "/courses/" + id + "/delete";
         form.submit();
     }
+}
+// login -- password visibility toggle
+function togglePasswordVisibility() {
+    const passwordInput = document.getElementById("loginPassword");
+    const eyeOpen = document.getElementById("eyeOpenIcon");
+    const eyeClosed = document.getElementById("eyeClosedIcon");
+
+    const isHidden = passwordInput.type === "password";
+
+    passwordInput.type = isHidden ? "text" : "password";
+    eyeOpen.style.display = isHidden ? "none" : "block";
+    eyeClosed.style.display = isHidden ? "block" : "none";
 }

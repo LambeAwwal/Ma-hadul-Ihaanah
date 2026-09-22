@@ -122,10 +122,18 @@
                 </div>
             </div>
 
-           <div class="class-card-footer" style="gap: 8px;">
+       <div class="class-card-footer" style="gap: 8px;">
     <a class="action-btn" href="/courses/<%= course.id %>" style="text-decoration:none;">View</a>
-    <button class="action-btn" onclick="openEditCourseModal(<%= course.id %>, '<%= course.course_name %>', '<%= course.teacher_name %>', <%= course.lessons_count %>, <%= course.progress %>, '<%= course.status %>')">Edit</button>
-    <button class="action-btn" style="background:#fee2e2; color:#991b1b; border-color:#fee2e2;" onclick="confirmDeleteCourse(<%= course.id %>, '<%= course.course_name %>')">Delete</button>
+    <button class="action-btn edit-course-btn"
+            data-id="<%= course.id %>"
+            data-name="<%= course.course_name %>"
+            data-teacher="<%= course.teacher_name %>"
+            data-lessons="<%= course.lessons_count %>"
+            data-progress="<%= course.progress %>"
+            data-status="<%= course.status %>">Edit</button>
+    <button class="action-btn delete-course-btn" style="background:#fee2e2; color:#991b1b; border-color:#fee2e2;"
+            data-id="<%= course.id %>"
+            data-name="<%= course.course_name %>">Delete</button>
 </div>
         </div>
 

@@ -721,6 +721,6 @@ function togglePasswordVisibility() {
     const isHidden = passwordInput.type === "password";
 
     passwordInput.type = isHidden ? "text" : "password";
-    eyeOpen.style.display = isHidden ? "none" : "block";
-    eyeClosed.style.display = isHidden ? "block" : "none";
+    eyeOpen.style.display = isHidden ? "block" : "none";
+    eyeClosed.style.display = isHidden ? "none" : "block";
 }

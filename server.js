@@ -1,8 +1,8 @@
 const express = require("express");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const pgSession = require("connect-pg-simple")(session);
-
+const path = require("path");
 const app = express();
 app.set("trust proxy", 1);
 
@@ -27,10 +27,55 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use((req, res, next) => {
+    res.locals.currentPath = req.path;
+    next();
+});
+
+app.use((req, res, next) => {
+    if (req.method === "GET" && !req.path.includes(".")) {
+        res.locals.flash = req.session.flash || null;
+        delete req.session.flash;
+    } else {
+        res.locals.flash = null;
+    }
+    next();
+});
+
+app.use(async (req, res, next) => {
+    res.locals.pendingEnrollments = 0;
+    try {
+        if (req.method === "GET" && req.session.user && req.session.user.role === "admin" && !req.path.includes(".")) {
+            const r = await pool.query("SELECT COUNT(*) FROM enrollments WHERE status = 'Pending'");
+            res.locals.pendingEnrollments = Number(r.rows[0].count);
+        }
+    } catch (e) {
+        // never let the badge break a page
+    }
+    next();
+});
+
+function notify(req, type, text) {
+    req.session.flash = { type, text };
+}
+
+function fail(req, err, text) {
+    notify(req, "error", err.code === "23505"
+        ? "That name or number already exists."
+        : text);
+}
+
+function lagosDay() {
+    return new Date(Date.now() + 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
 function requireLogin(role) {
     return (req, res, next) => {
         if (!req.session.user) {
             return res.redirect("/login");
+        }
+        if (req.session.user.role === "admin" && req.session.user.day !== lagosDay()) {
+            return req.session.destroy(() => res.redirect("/login"));
         }
         if (role && req.session.user.role !== role) {
             return res.status(403).send("Access denied.");
@@ -43,8 +88,54 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.engine("ejs", require("ejs").__express);
 
-app.get("/", requireLogin("admin"), async (req, res) => {
+// Public landing page (no login needed)
+app.get("/", async (req, res) => {
+    try {
+        const classesResult = await pool.query(
+            "SELECT class_name FROM classes WHERE status = 'Active' ORDER BY class_name"
+        );
+        res.render("landing", {
+            classes: classesResult.rows,
+            enrolled: req.query.enrolled === "1",
+            error: req.query.error === "1"
+        });
+    } catch (err) {
+        console.error(err);
+        res.render("landing", { classes: [], enrolled: false, error: false });
+    }
+});
+
+// Public enrollment form
+app.post("/enroll", async (req, res) => {
+    try {
+        const {
+            full_name, date_of_birth, gender, level,
+            parent_guardian_name, phone, email, address, message, website
+        } = req.body;
+
+        // Honeypot: real visitors never see this hidden field, spam bots fill it in
+        if (website) return res.redirect("/");
+
+        if (!full_name || !phone) return res.redirect("/?error=1#enroll");
+
+        await pool.query(
+            `INSERT INTO enrollments
+                (full_name, date_of_birth, gender, level, parent_guardian_name, phone, email, address, message)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+            [full_name, date_of_birth || null, gender, level, parent_guardian_name, phone, email, address, message]
+        );
+
+        res.redirect("/?enrolled=1#enroll");
+    } catch (err) {
+        console.error(err);
+        res.redirect("/?error=1#enroll");
+    }
+});
+
+app.get("/admin", requireLogin("admin"), async (req, res) => {
     try {
         const studentsCount = await pool.query("SELECT COUNT(*) FROM students");
         const teachersCount = await pool.query("SELECT COUNT(*) FROM teachers");
@@ -137,10 +228,10 @@ app.post("/students/:id/edit", requireLogin("admin"), async (req, res) => {
             [full_name, email, gender, studentClass, date_of_birth || null, parent_guardian_name, parent_phone, address, status, req.params.id]
         );
 
-        res.redirect("/students");
+        notify(req, "success", "Student updated."); res.redirect("/students");
     } catch (err) {
         console.error(err);
-        res.status(500).send("Error updating student");
+        fail(req, err, "Could not update the student."); res.redirect("/students");
     }
 });
 
@@ -208,10 +299,15 @@ app.post("/students", requireLogin("admin"), async (req, res) => {
             [full_name, admission_number, email, gender, studentClass, date_of_birth || null, parent_guardian_name, parent_phone, address, hashedPassword]
         );
 
-        res.redirect("/students");
+notify(req, "success", "Student added successfully.");
+res.redirect("/students");
     } catch (err) {
         console.error(err);
-        res.status(500).send("Error saving student");
+notify(req, "error", err.code === "23505"
+    ? "A student with that admission number already exists."
+    : "Could not save the student. Please try again.");
+res.redirect("/students");
+
     }
 });
 
@@ -303,10 +399,10 @@ app.post("/teachers", requireLogin("admin"), async (req, res) => {
             [full_name, teacher_id, email, phone, subject, classes, hashedPassword]
         );
 
-        res.redirect("/teachers");
+        notify(req, "success", "Teacher added successfully."); res.redirect("/teachers");
     } catch (err) {
         console.error(err);
-        res.status(500).send("Error saving teacher");
+        fail(req, err, "Could not save the teacher. Please try again."); res.redirect("/teachers");
     }
 });
 
@@ -346,10 +442,10 @@ app.post("/classes", requireLogin("admin"), async (req, res) => {
             [class_name, teacher_name, schedule, courses, capacity || null, status]
         );
 
-        res.redirect("/classes");
+        notify(req, "success", "Class added successfully."); res.redirect("/classes");
     } catch (err) {
         console.error(err);
-        res.status(500).send("Error saving class");
+        fail(req, err, "Could not save the class. Please try again."); res.redirect("/classes");
     }
 });
 
@@ -391,20 +487,20 @@ app.post("/classes/:id/edit", requireLogin("admin"), async (req, res) => {
             [class_name, teacher_name, schedule, courses, capacity || null, status, req.params.id]
         );
 
-        res.redirect("/classes");
+        notify(req, "success", "Class updated."); res.redirect("/classes");
     } catch (err) {
         console.error(err);
-        res.status(500).send("Error updating class");
+        fail(req, err, "Could not update the class."); res.redirect("/classes");
     }
 });
 
 app.post("/classes/:id/delete", requireLogin("admin"), async (req, res) => {
     try {
         await pool.query("DELETE FROM classes WHERE id = $1", [req.params.id]);
-        res.redirect("/classes");
+        notify(req, "success", "Class deleted."); res.redirect("/classes");
     } catch (err) {
         console.error(err);
-        res.status(500).send("Error deleting class");
+        fail(req, err, "Could not delete the class."); res.redirect("/classes");
     }
 });
 
@@ -449,20 +545,20 @@ app.post("/courses/:id/edit", requireLogin("admin"), async (req, res) => {
             [course_name, teacher_name, lessons_count || 0, progress || 0, status, req.params.id]
         );
 
-        res.redirect("/courses");
+        notify(req, "success", "Course updated."); res.redirect("/courses");
     } catch (err) {
         console.error(err);
-        res.status(500).send("Error updating course");
+        fail(req, err, "Could not update the course."); res.redirect("/courses");
     }
 });
 
 app.post("/courses/:id/delete", requireLogin("admin"), async (req, res) => {
     try {
         await pool.query("DELETE FROM courses WHERE id = $1", [req.params.id]);
-        res.redirect("/courses");
+        notify(req, "success", "Course deleted."); res.redirect("/courses");
     } catch (err) {
         console.error(err);
-        res.status(500).send("Error deleting course");
+        fail(req, err, "Could not delete the course."); res.redirect("/courses");
     }
 });
 
@@ -505,10 +601,10 @@ app.post("/courses", requireLogin("admin"), async (req, res) => {
             [course_name, teacher_name, lessons_count || 0, progress || 0, status]
         );
 
-        res.redirect("/courses");
+        notify(req, "success", "Course added successfully."); res.redirect("/courses");
     } catch (err) {
         console.error(err);
-        res.status(500).send("Error saving course");
+        fail(req, err, "Could not save the course. Please try again."); res.redirect("/courses");
     }
 });
 
@@ -556,17 +652,29 @@ app.post("/results", requireLogin("admin"), async (req, res) => {
             [student_name, course_name, exam_type, score, grade, term, remarks]
         );
 
-        res.redirect("/results");
+        notify(req, "success", "Result saved."); res.redirect("/results");
     } catch (err) {
         console.error(err);
-        res.status(500).send("Error saving result");
+        fail(req, err, "Could not save the result. Please try again."); res.redirect("/results");
     }
 });
 
+function pickDate(req) {
+    const d = req.query.date;
+    return /^\d{4}-\d{2}-\d{2}$/.test(d || "") ? d : lagosDay();
+}
+
 app.get("/attendance", requireLogin("admin"), async (req, res) => {
     try {
+        const date = pickDate(req);
         const result = await pool.query("SELECT * FROM students ORDER BY id");
-        res.render("attendance", { students: result.rows });
+        const saved = await pool.query(
+            "SELECT admission_number, status FROM attendance WHERE attendance_date = $1", [date]
+        );
+        const statusMap = {};
+        saved.rows.forEach(r => { statusMap[r.admission_number] = r.status; });
+
+        res.render("attendance", { students: result.rows, date, statusMap });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading attendance page");
@@ -576,12 +684,13 @@ app.get("/attendance", requireLogin("admin"), async (req, res) => {
 app.post("/attendance", requireLogin("admin"), async (req, res) => {
     try {
         const { date, records } = req.body;
-        // records is an array like: [{ student_id, full_name, admission_number, class, status }, ...]
 
         for (const record of records) {
             await pool.query(
                 `INSERT INTO attendance (student_name, admission_number, class, attendance_date, status)
-                 VALUES ($1, $2, $3, $4, $5)`,
+                 VALUES ($1, $2, $3, $4, $5)
+                 ON CONFLICT (admission_number, attendance_date)
+                 DO UPDATE SET status = EXCLUDED.status, class = EXCLUDED.class, student_name = EXCLUDED.student_name`,
                 [record.full_name, record.admission_number, record.class, date, record.status]
             );
         }
@@ -647,12 +756,111 @@ app.post("/announcements", requireLogin("admin"), async (req, res) => {
             [title, message, audience]
         );
 
-        res.redirect("/announcements");
+        notify(req, "success", "Announcement posted."); res.redirect("/announcements");
     } catch (err) {
         console.error(err);
-        res.status(500).send("Error saving announcement");
+        fail(req, err, "Could not post the announcement. Please try again."); res.redirect("/announcements");
     }
 });
+
+async function nextAdmissionNumber(db) {
+    const year = new Date().getFullYear();
+    const last = await db.query(
+        "SELECT admission_number FROM students WHERE admission_number LIKE $1 ORDER BY id DESC LIMIT 1",
+        [`AS/${year}/%`]
+    );
+    let next = 1;
+    if (last.rows.length > 0) {
+        next = parseInt(last.rows[0].admission_number.split("/")[2]) + 1;
+    }
+    return `AS/${year}/${String(next).padStart(3, "0")}`;
+}
+
+app.get("/enrollments", requireLogin("admin"), async (req, res) => {
+    try {
+        const result = await pool.query(
+            "SELECT * FROM enrollments ORDER BY (status = 'Pending') DESC, created_at DESC"
+        );
+        const classesResult = await pool.query(
+            "SELECT class_name FROM classes WHERE status = 'Active' ORDER BY class_name"
+        );
+        const list = result.rows;
+
+        res.render("enrollments", {
+            enrollments: list,
+            classes: classesResult.rows,
+            totalApps: list.length,
+            pendingApps: list.filter(e => e.status === "Pending").length,
+            acceptedApps: list.filter(e => e.status === "Accepted").length,
+            rejectedApps: list.filter(e => e.status === "Rejected").length
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error loading enrollments");
+    }
+});
+
+app.post("/enrollments/:id/accept", requireLogin("admin"), async (req, res) => {
+    const client = await pool.connect();
+    try {
+        const { full_name, email, class: studentClass, password } = req.body;
+
+        if (!full_name || !studentClass || !password || password.length < 6) {
+            notify(req, "error", "Please fill in the name, class and a password of at least 6 characters.");
+            return res.redirect("/enrollments");
+        }
+
+        await client.query("BEGIN");
+
+        const found = await client.query(
+            "SELECT * FROM enrollments WHERE id = $1 AND status = 'Pending' FOR UPDATE",
+            [req.params.id]
+        );
+        if (found.rows.length === 0) {
+            await client.query("ROLLBACK");
+            notify(req, "error", "That application was already handled.");
+            return res.redirect("/enrollments");
+        }
+
+        const e = found.rows[0];
+        const admission_number = await nextAdmissionNumber(client);
+        const hashed = await bcrypt.hash(password, 10);
+
+        await client.query(
+            `INSERT INTO students
+                (full_name, admission_number, email, gender, class, date_of_birth, parent_guardian_name, parent_phone, address, password)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+            [full_name, admission_number, email || null, e.gender, studentClass, e.date_of_birth, e.parent_guardian_name, e.phone, e.address, hashed]
+        );
+
+        await client.query("UPDATE enrollments SET status = 'Accepted' WHERE id = $1", [e.id]);
+        await client.query("COMMIT");
+
+        notify(req, "success", full_name + " was accepted. Admission number: " + admission_number + ".");
+    } catch (err) {
+        await client.query("ROLLBACK").catch(() => {});
+        console.error(err);
+        fail(req, err, "Could not accept the application. Please try again.");
+    } finally {
+        client.release();
+    }
+    res.redirect("/enrollments");
+});
+
+app.post("/enrollments/:id/reject", requireLogin("admin"), async (req, res) => {
+    try {
+        await pool.query(
+            "UPDATE enrollments SET status = 'Rejected' WHERE id = $1 AND status = 'Pending'",
+            [req.params.id]
+        );
+        notify(req, "success", "Application rejected.");
+    } catch (err) {
+        console.error(err);
+        fail(req, err, "Could not update the application.");
+    }
+    res.redirect("/enrollments");
+});
+
 app.get("/login", (req, res) => {
     res.render("login", { error: null });
 });
@@ -689,14 +897,15 @@ app.post("/login", async (req, res) => {
         }
 
         // Save logged-in user info in the session
-        req.session.user = {
-            id: user.id,
-            name: user.full_name,
-            email: user.email,
-            role: role
-        };
+      req.session.user = {
+    id: user.id,
+    name: user.full_name,
+    email: user.email,
+    role: role,
+    day: lagosDay()
+};
 
-        if (role === "admin") res.redirect("/");
+        if (role === "admin") res.redirect("/admin");
         else if (role === "teacher") res.redirect("/teacher/dashboard");
         else res.redirect("/student/dashboard");
 
@@ -709,7 +918,7 @@ app.post("/login", async (req, res) => {
 
 app.get("/logout", (req, res) => {
     req.session.destroy(() => {
-        res.redirect("/login");
+        res.redirect("/");
     });
 });
 
@@ -948,22 +1157,29 @@ app.post("/teacher/results", requireLogin("teacher"), async (req, res) => {
             [student_name, course_name, exam_type, score, grade, "Term 1", remarks]
         );
 
-        res.redirect("/teacher/results");
+        notify(req, "success", "Result saved."); res.redirect("/teacher/results");
     } catch (err) {
         console.error(err);
-        res.status(500).send("Error saving result");
+        fail(req, err, "Could not save the result. Please try again."); res.redirect("/teacher/results");
     }
 });
 
 app.get("/teacher/attendance", requireLogin("teacher"), async (req, res) => {
     try {
         const teacherName = req.session.user.name;
+        const date = pickDate(req);
+
         const classesResult = await pool.query("SELECT class_name FROM classes WHERE teacher_name = $1", [teacherName]);
         const classNames = classesResult.rows.map(c => c.class_name);
 
         const studentsResult = await pool.query("SELECT * FROM students WHERE class = ANY($1) ORDER BY id", [classNames]);
+        const saved = await pool.query(
+            "SELECT admission_number, status FROM attendance WHERE attendance_date = $1", [date]
+        );
+        const statusMap = {};
+        saved.rows.forEach(r => { statusMap[r.admission_number] = r.status; });
 
-        res.render("teacher/attendance", { students: studentsResult.rows });
+        res.render("teacher/attendance", { students: studentsResult.rows, date, statusMap });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error loading attendance");
@@ -977,7 +1193,9 @@ app.post("/teacher/attendance", requireLogin("teacher"), async (req, res) => {
         for (const record of records) {
             await pool.query(
                 `INSERT INTO attendance (student_name, admission_number, class, attendance_date, status)
-                 VALUES ($1, $2, $3, $4, $5)`,
+                 VALUES ($1, $2, $3, $4, $5)
+                 ON CONFLICT (admission_number, attendance_date)
+                 DO UPDATE SET status = EXCLUDED.status, class = EXCLUDED.class, student_name = EXCLUDED.student_name`,
                 [record.full_name, record.admission_number, record.class, date, record.status]
             );
         }
@@ -1008,10 +1226,10 @@ app.post("/teacher/announcements", requireLogin("teacher"), async (req, res) => 
              VALUES ($1, $2, $3, $4)`,
             [title, message, audience, req.session.user.name]
         );
-        res.redirect("/teacher/announcements");
+        notify(req, "success", "Announcement posted."); res.redirect("/teacher/announcements");
     } catch (err) {
         console.error(err);
-        res.status(500).send("Error saving announcement");
+        fail(req, err, "Could not post the announcement. Please try again."); res.redirect("/teacher/announcements");
     }
 });
 app.get("/teacher/lessons", requireLogin("teacher"), (req, res) => {
@@ -1020,6 +1238,90 @@ app.get("/teacher/lessons", requireLogin("teacher"), (req, res) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+const { OAuth2Client } = require("google-auth-library");
+const crypto = require("crypto");
+
+const googleClient = new OAuth2Client(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    process.env.GOOGLE_CALLBACK_URL || "http://localhost:3000/auth/google/callback"
+);
+
+// Step 1: send the person to Google
+app.get("/auth/google", (req, res) => {
+    const role = req.query.role === "teacher" ? "teacher" : "student";
+    const state = crypto.randomBytes(16).toString("hex");
+
+    req.session.googleState = state;
+    req.session.googleRole = role;
+
+    const url = googleClient.generateAuthUrl({
+        scope: ["openid", "email", "profile"],
+        state,
+        prompt: "select_account"
+    });
+
+    req.session.save(() => res.redirect(url));
 });
+
+// Step 2: Google sends them back here
+app.get("/auth/google/callback", async (req, res) => {
+    try {
+        const { code, state } = req.query;
+        const role = req.session.googleRole;
+
+        if (!code || !state || state !== req.session.googleState || !role) {
+            return res.render("login", { error: "Google sign-in expired. Please try again." });
+        }
+
+        delete req.session.googleState;
+        delete req.session.googleRole;
+
+        const { tokens } = await googleClient.getToken(code);
+        const ticket = await googleClient.verifyIdToken({
+            idToken: tokens.id_token,
+            audience: process.env.GOOGLE_CLIENT_ID
+        });
+        const payload = ticket.getPayload();
+
+        if (!payload.email || !payload.email_verified) {
+            return res.render("login", { error: "Your Google email could not be verified." });
+        }
+
+        const table = role === "teacher" ? "teachers" : "students";
+        const result = await pool.query(
+            `SELECT * FROM ${table} WHERE LOWER(email) = LOWER($1) LIMIT 1`,
+            [payload.email]
+        );
+
+        if (result.rows.length === 0) {
+            return res.render("login", {
+                error: "This Google account is not registered as a " + role + ". Ask the school to add your email first."
+            });
+        }
+
+        const user = result.rows[0];
+        req.session.user = {
+            id: user.id,
+            name: user.full_name,
+            email: user.email,
+            role: role,
+            day: lagosDay()
+        };
+
+        req.session.save(() => {
+            res.redirect(role === "teacher" ? "/teacher/dashboard" : "/student/dashboard");
+        });
+    } catch (err) {
+        console.error(err);
+        res.render("login", { error: "Google sign-in failed. Please try again." });
+    }
+});
+
+if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`Server running at http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;

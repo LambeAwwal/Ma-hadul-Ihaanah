@@ -43,7 +43,7 @@
         <option><%= cls %></option>
     <% }); %>
 </select>
-            <input type="date" id="attendanceDate" class="date-input" value="<%= new Date().toISOString().split('T')[0] %>">
+<input type="date" id="attendanceDate" class="date-input" value="<%= date %>" onchange="window.location='?date=' + this.value">
         </div>
 
         <div class="table-container">

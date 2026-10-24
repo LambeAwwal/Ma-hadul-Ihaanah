@@ -1,0 +1,177 @@
+<%- include("partials/header") %>
+<%- include("partials/sidebar") %>
+
+<div class="logout">
+    <a href="/logout">🚪 Logout</a>
+</div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>Enrollments</h1>
+            <p>Review applications from the website</p>
+        </div>
+
+        <div class="profile">
+            <div class="avatar"><%= user.name.split(" ").map(n => n[0]).join("").toUpperCase() %></div>
+            <div>
+                <strong><%= user.name %></strong>
+                <small><%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %></small>
+            </div>
+        </div>
+    </header>
+
+    <section class="stats">
+        <div class="card"><span class="icon">📥</span><div><p>Total Applications</p><h2><%= totalApps %></h2></div></div>
+        <div class="card"><span class="icon">⏳</span><div><p>Waiting</p><h2><%= pendingApps %></h2></div></div>
+        <div class="card"><span class="icon">✅</span><div><p>Accepted</p><h2><%= acceptedApps %></h2></div></div>
+        <div class="card"><span class="icon">❌</span><div><p>Rejected</p><h2><%= rejectedApps %></h2></div></div>
+    </section>
+
+    <section class="panel">
+
+        <div class="student-toolbar">
+            <div>
+                <h2>All Applications</h2>
+                <p class="toolbar-description">Accept an application to create the student's account</p>
+            </div>
+        </div>
+
+        <div class="student-filters">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="enrollmentSearch" placeholder="Search applicant..." onkeyup="searchEnrollments()">
+            </div>
+
+            <select id="enrollmentStatusFilter" onchange="filterEnrollments()">
+                <option value="all">All Status</option>
+                <option value="Pending">Waiting</option>
+                <option value="Accepted">Accepted</option>
+                <option value="Rejected">Rejected</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table id="enrollmentsTable">
+                <thead>
+                    <tr>
+                        <th>Applicant</th>
+                        <th>Level</th>
+                        <th>Parent / Guardian</th>
+                        <th>Phone</th>
+                        <th>Applied</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% if (enrollments.length === 0) { %>
+                        <tr><td colspan="7">No applications yet. They will appear here when someone uses the form on your home page.</td></tr>
+                    <% } %>
+
+                    <% enrollments.forEach(e => { %>
+                        <tr data-status="<%= e.status %>">
+                            <td>
+                                <div class="student-name">
+                                    <div class="student-avatar"><%= e.full_name.split(" ").map(n => n[0]).join("").toUpperCase() %></div>
+                                    <div>
+                                        <strong><%= e.full_name %></strong>
+                                        <small><%= e.email || "No email given" %></small>
+                                        <% if (e.message) { %><small>"<%= e.message %>"</small><% } %>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><%= e.level || "-" %></td>
+                            <td><%= e.parent_guardian_name || "-" %></td>
+                            <td><%= e.phone %></td>
+                            <td><%= new Date(e.created_at).toDateString() %></td>
+                            <td>
+                                <span class="status <%= e.status === 'Accepted' ? 'active-status' : (e.status === 'Rejected' ? 'status-rejected' : 'status-pending') %>">
+                                    <%= e.status === "Pending" ? "Waiting" : e.status %>
+                                </span>
+                            </td>
+                            <td>
+                                <% if (e.status === "Pending") { %>
+                                    <button class="action-btn accept-enrollment-btn"
+                                            data-id="<%= e.id %>"
+                                            data-name="<%= e.full_name %>"
+                                            data-email="<%= e.email || '' %>"
+                                            data-level="<%= e.level || '' %>">Accept</button>
+                                    <button class="action-btn reject-enrollment-btn"
+                                            style="background:#fee2e2; color:#991b1b; border-color:#fee2e2;"
+                                            data-id="<%= e.id %>"
+                                            data-name="<%= e.full_name %>">Reject</button>
+                                <% } else { %>
+                                    -
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <%- include("partials/footer") %>
+</main>
+
+<!-- ACCEPT MODAL -->
+<div class="modal-overlay" id="acceptModal">
+    <div class="student-modal">
+        <div class="modal-header">
+            <div>
+                <h2>Accept application</h2>
+                <p>This creates the student's account</p>
+            </div>
+            <button class="close-modal" onclick="closeAcceptModal()">×</button>
+        </div>
+
+        <form method="POST" id="acceptForm">
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label>Student's Full Name</label>
+                    <input type="text" name="full_name" id="acceptName" required>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Email <span class="field-hint">(the student logs in with this)</span></label>
+                    <input type="email" name="email" id="acceptEmail">
+                </div>
+
+                <div class="form-group">
+                    <label>Class</label>
+                    <select name="class" id="acceptClass" required>
+                        <option value="">Select class</option>
+                        <% classes.forEach(c => { %>
+                            <option value="<%= c.class_name %>"><%= c.class_name %></option>
+                        <% }); %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Temporary Password</label>
+                    <input type="password" name="password" minlength="6" required>
+                </div>
+            </div>
+
+            <p class="field-hint" style="margin-top: 14px;">
+                Tell the family this password. If they have a Google account with the same email, they can also use "Sign in with Google".
+            </p>
+
+            <div class="form-actions">
+                <button type="button" class="cancel-btn" onclick="closeAcceptModal()">Cancel</button>
+                <button type="submit" class="save-btn">Accept and Create Student</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<form id="rejectEnrollmentForm" method="POST" style="display:none;"></form>
+
+<script src="/js/app.js"></script>
+
+</body>
+</html>

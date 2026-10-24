@@ -1,9 +1,11 @@
+<% const is = (p) => currentPath === p || currentPath.startsWith(p + "/"); %>
 <nav>
-            <a href="/teacher/dashboard">🏠 Dashboard</a>
-            <a href="/teacher/students">👨‍🎓 My Students</a>
-            <a href="/teacher/classes">📚 My Classes</a>
-            <a href="/teacher/lessons">📖 Lessons</a>
-            <a href="/teacher/results">📊 Results</a>
-            <a href="/teacher/attendance">📅 Attendance</a>
-            <a href="/teacher/announcements">📢 Announcements</a>
-        </nav>
+    <a href="/teacher/dashboard" class="<%= is('/teacher/dashboard') ? 'active' : '' %>">🏠 Dashboard</a>
+    <a href="/teacher/students" class="<%= is('/teacher/students') ? 'active' : '' %>">👨‍🎓 My Students</a>
+    <a href="/teacher/classes" class="<%= is('/teacher/classes') ? 'active' : '' %>">📚 My Classes</a>
+    <span class="nav-soon">📖 Lessons <em>Soon</em></span>
+    <a href="/teacher/results" class="<%= is('/teacher/results') ? 'active' : '' %>">📊 Results</a>
+    <a href="/teacher/attendance" class="<%= is('/teacher/attendance') ? 'active' : '' %>">📅 Attendance</a>
+    <span class="nav-soon">🕌 Qur'an Progress <em>Soon</em></span>
+    <a href="/teacher/announcements" class="<%= is('/teacher/announcements') ? 'active' : '' %>">📢 Announcements</a>
+</nav>

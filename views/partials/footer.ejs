@@ -19,3 +19,17 @@
     </div>
 
 </footer>
+
+<% if (typeof flash !== "undefined" && flash) { %>
+    <div class="toast toast-<%= flash.type %>" id="toast"><%= flash.type === "success" ? "✓ " : "⚠ " %><%= flash.text %></div>
+    <script>
+        setTimeout(function () {
+            var t = document.getElementById("toast");
+            if (t) {
+                t.style.transition = "opacity .4s";
+                t.style.opacity = "0";
+                setTimeout(function () { t.remove(); }, 400);
+            }
+        }, 4000);
+    </script>
+<% } %>

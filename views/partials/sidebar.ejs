@@ -1,11 +1,14 @@
+<% const is = (p) => currentPath === p || currentPath.startsWith(p + "/"); %>
 <nav>
-            <a href="/">🏠 Dashboard</a>
-            <a href="/students">👨‍🎓 Students</a>
-            <a href="/teachers">👨‍🏫 Teachers</a>
-            <a href="/classes">📚 Classes</a>
-            <a href="/courses">📖 Courses</a>
-            <a href="/assignments">📝 Assignments</a>
-            <a href="/results">📊 Results</a>
-            <a href="/attendance">📅 Attendance</a>
-            <a href="/announcements">📢 Announcements</a>
-        </nav>
+    <a href="/admin" class="<%= is('/admin') ? 'active' : '' %>">🏠 Dashboard</a>
+    <a href="/students" class="<%= is('/students') ? 'active' : '' %>">👨‍🎓 Students</a>
+        <a href="/enrollments" class="<%= is('/enrollments') ? 'active' : '' %>">📥 Enrollments<% if (pendingEnrollments > 0) { %> <em class="nav-badge"><%= pendingEnrollments %></em><% } %></a>
+    <a href="/teachers" class="<%= is('/teachers') ? 'active' : '' %>">👨‍🏫 Teachers</a>
+    <a href="/classes" class="<%= is('/classes') ? 'active' : '' %>">📚 Classes</a>
+    <a href="/courses" class="<%= is('/courses') ? 'active' : '' %>">📖 Courses</a>
+    <span class="nav-soon">📝 Assignments <em>Soon</em></span>
+    <a href="/results" class="<%= is('/results') ? 'active' : '' %>">📊 Results</a>
+    <a href="/attendance" class="<%= is('/attendance') ? 'active' : '' %>">📅 Attendance</a>
+    <span class="nav-soon">🕌 Qur'an Progress <em>Soon</em></span>
+    <a href="/announcements" class="<%= is('/announcements') ? 'active' : '' %>">📢 Announcements</a>
+</nav>

@@ -724,3 +724,51 @@ function togglePasswordVisibility() {
     eyeOpen.style.display = isHidden ? "block" : "none";
     eyeClosed.style.display = isHidden ? "none" : "block";
 }
+
+// =================================
+// ENROLLMENTS
+// =================================
+
+function searchEnrollments() {
+    const input = document.getElementById("enrollmentSearch").value.toLowerCase();
+    document.querySelectorAll("#enrollmentsTable tbody tr[data-status]").forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(input) ? "" : "none";
+    });
+}
+
+function filterEnrollments() {
+    const selected = document.getElementById("enrollmentStatusFilter").value;
+    document.querySelectorAll("#enrollmentsTable tbody tr[data-status]").forEach(row => {
+        row.style.display = (selected === "all" || row.dataset.status === selected) ? "" : "none";
+    });
+}
+
+function closeAcceptModal() {
+    document.getElementById("acceptModal").classList.remove("show");
+}
+
+document.querySelectorAll(".accept-enrollment-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        document.getElementById("acceptForm").action = "/enrollments/" + btn.dataset.id + "/accept";
+        document.getElementById("acceptName").value = btn.dataset.name;
+        document.getElementById("acceptEmail").value = btn.dataset.email;
+
+        const select = document.getElementById("acceptClass");
+        select.value = "";
+        Array.from(select.options).forEach(option => {
+            if (option.value === btn.dataset.level) select.value = option.value;
+        });
+
+        document.getElementById("acceptModal").classList.add("show");
+    });
+});
+
+document.querySelectorAll(".reject-enrollment-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        if (confirm("Reject the application from " + btn.dataset.name + "?")) {
+            const form = document.getElementById("rejectEnrollmentForm");
+            form.action = "/enrollments/" + btn.dataset.id + "/reject";
+            form.submit();
+        }
+    });
+});

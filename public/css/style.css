@@ -1100,6 +1100,195 @@ td {
 .login-btn:hover {
     opacity: 0.9;
 }
+
+.sidebar nav .nav-soon {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    color: rgba(203, 213, 225, 0.5);
+    cursor: not-allowed;
+}
+
+.sidebar nav .nav-soon em {
+    font-style: normal;
+    font-size: 10px;
+    background: #F9D2BA;
+    color: #5E3122;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 3000;
+    max-width: 340px;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    animation: toastIn 0.3s ease;
+}
+
+.toast-success { background: #dcfce7; color: #166534; }
+.toast-error { background: #fee2e2; color: #991b1b; }
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 600px) {
+    .toast { left: 15px; right: 15px; top: 70px; max-width: none; }
+}
+
+.setup-guide .setup-count {
+    font-size: 13px;
+    font-weight: 600;
+    background: #fff;
+    color: #006B4F;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+.setup-intro {
+    color: #66473c;
+    font-size: 14px;
+    margin: -8px 0 16px;
+}
+
+.setup-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.setup-step {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px 16px;
+    opacity: 0.7;
+    border: 2px solid transparent;
+}
+
+.setup-step.is-next {
+    opacity: 1;
+    border-color: #006B4F;
+}
+
+.setup-mark {
+    flex: 0 0 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: #5E3122;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.setup-step.is-next .setup-mark { background: #F9D2BA; }
+.setup-step.is-done .setup-mark { background: #006B4F; color: #fff; }
+
+.setup-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.setup-body strong { font-size: 15px; }
+.setup-body span { font-size: 13px; color: #66473c; }
+
+.setup-link {
+    background: #006B4F;
+    color: #fff;
+    text-decoration: none;
+    padding: 9px 16px;
+    border-radius: 7px;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+    .setup-step { flex-wrap: wrap; }
+    .setup-link { width: 100%; text-align: center; }
+}
+
+.google-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 22px 0 16px;
+    color: #66473c;
+    font-size: 13px;
+}
+
+.google-divider::before,
+.google-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+.google-buttons { display: flex; gap: 10px; }
+
+.google-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 8px;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    background: #fff;
+    color: #3c4043;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.google-btn:hover { background: #f8f9fa; }
+
+.google-note {
+    text-align: center;
+    font-size: 12px;
+    color: #66473c;
+    margin-top: 12px;
+}
+
+@media (max-width: 400px) {
+    .google-buttons { flex-direction: column; }
+}
+
+.sidebar nav .nav-badge {
+    font-style: normal;
+    font-size: 11px;
+    font-weight: bold;
+    background: #F9D2BA;
+    color: #5E3122;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 6px;
+}
+
+.status-pending { background: #fef3c7; color: #92400e; }
+.status-rejected { background: #fee2e2; color: #991b1b; }
+
+.field-hint {
+    font-size: 12px;
+    color: #66473c;
+    font-weight: normal;
+}
 /* =================================
    RESPONSIVE DESIGN
    ================================= */

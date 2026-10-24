@@ -29,10 +29,43 @@
                 </div>
             </div>
 
-        </header>
-
+        </header> 
 
         <!-- STATISTICS -->
+         <% const steps = [
+    { done: Number(totalTeachers) > 0, title: "Add your teachers", text: "Start here, because every class needs a teacher.", link: "/teachers", label: "Go to Teachers" },
+    { done: Number(totalClasses) > 0, title: "Create your classes", text: "For example Beginner 1 or Advanced. Choose a teacher for each one.", link: "/classes", label: "Go to Classes" },
+    { done: Number(totalCourses) > 0, title: "Add your courses", text: "The subjects you teach, like Qur'an or Fiqh.", link: "/courses", label: "Go to Courses" },
+    { done: Number(totalStudents) > 0, title: "Register your students", text: "Put each student in a class. Their teacher follows from the class.", link: "/students", label: "Go to Students" }
+]; %>
+<% const doneCount = steps.filter(s => s.done).length; %>
+
+<% if (doneCount < steps.length) { %>
+<section class="panel setup-guide">
+    <div class="panel-header">
+        <h2>Getting started</h2>
+        <span class="setup-count"><%= doneCount %> of <%= steps.length %> done</span>
+    </div>
+    <p class="setup-intro">Follow these steps in order to set up your school.</p>
+
+    <div class="setup-steps">
+        <% let nextShown = false; %>
+        <% steps.forEach((s, i) => { %>
+            <% const isNext = !s.done && !nextShown; if (isNext) nextShown = true; %>
+            <div class="setup-step <%= s.done ? 'is-done' : '' %> <%= isNext ? 'is-next' : '' %>">
+                <span class="setup-mark"><%= s.done ? "✓" : (i + 1) %></span>
+                <div class="setup-body">
+                    <strong><%= s.title %></strong>
+                    <span><%= s.text %></span>
+                </div>
+                <% if (!s.done) { %>
+                    <a href="<%= s.link %>" class="setup-link"><%= s.label %></a>
+                <% } %>
+            </div>
+        <% }); %>
+    </div>
+</section>
+<% } %>
         <section class="stats">
 
     <div class="card">

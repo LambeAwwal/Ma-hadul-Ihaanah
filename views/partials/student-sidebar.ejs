@@ -1,10 +1,12 @@
+<% const is = (p) => currentPath === p || currentPath.startsWith(p + "/"); %>
 <nav>
-            <a href="/student/dashboard">🏠 Dashboard</a>
-            <a href="/student/courses">📚 My Courses</a>
-            <a href="/student/lessons">📖 Lessons</a>
-            <a href="/student/assignments">📝 Assignments</a>
-            <a href="/student/results">📊 My Results</a>
-            <a href="/student/attendance">📅 My Attendance</a>
-            <a href="/student/announcements">📢 Announcements</a>
-            <a href="/student/profile">👤 My Profile</a>
-        </nav>
+    <a href="/student/dashboard" class="<%= is('/student/dashboard') ? 'active' : '' %>">🏠 Dashboard</a>
+    <a href="/student/courses" class="<%= is('/student/courses') ? 'active' : '' %>">📚 My Courses</a>
+    <span class="nav-soon">📖 Lessons <em>Soon</em></span>
+    <span class="nav-soon">📝 Assignments <em>Soon</em></span>
+    <a href="/student/results" class="<%= is('/student/results') ? 'active' : '' %>">📊 My Results</a>
+    <a href="/student/attendance" class="<%= is('/student/attendance') ? 'active' : '' %>">📅 My Attendance</a>
+    <span class="nav-soon">🕌 Qur'an Progress <em>Soon</em></span>
+    <a href="/student/announcements" class="<%= is('/student/announcements') ? 'active' : '' %>">📢 Announcements</a>
+    <a href="/student/profile" class="<%= is('/student/profile') ? 'active' : '' %>">👤 My Profile</a>
+</nav>

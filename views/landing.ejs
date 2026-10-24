@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <title>Ma'hadul Ihaanah Institute of Arabic &amp; Islamic Studies</title>
+    <meta name="description" content="Learn the Arabic language, the Qur'an, Tajweed, Hadith and Fiqh. Enroll today.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/landing.css">
+    <noscript><style>.reveal, .fade-up { opacity: 1; transform: none; }</style></noscript>
+</head>
+<body>
+
+<% let dash = "/login"; if (user) { dash = user.role === "admin" ? "/admin" : "/" + user.role + "/dashboard"; } %>
+
+<!-- NAVBAR -->
+<nav class="nav" id="nav">
+    <div class="container nav-inner">
+        <a href="/" class="brand">
+            <img src="/images/Mahadul Ihanah.png" alt="School logo">
+            <span>Ma'hadul Ihaanah<small>Arabic &amp; Islamic Studies</small></span>
+        </a>
+
+        <button class="menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+
+        <div class="nav-links" id="navLinks">
+            <a href="#about">About</a>
+            <a href="#programs">Programs</a>
+            <a href="#features">Why Us</a>
+            <a href="#enroll">Enroll</a>
+            <a href="<%= dash %>" class="btn btn-peach"><%= user ? "My Dashboard" : "Login" %></a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+    <div class="hero-pattern"></div>
+
+    <div class="container hero-grid">
+        <div class="hero-text">
+            <p class="hero-ar ar fade-up" style="--d:.1s">معهد الإعانة للدراسات العربية والإسلامية</p>
+            <span class="pill fade-up" style="--d:.25s">Admissions open</span>
+            <h1 class="fade-up" style="--d:.4s">Knowledge is <span>light.</span></h1>
+            <p class="hero-sub fade-up" style="--d:.6s">
+                Learn the Arabic language, the Qur'an and the Islamic sciences with dedicated teachers,
+                supported by a modern digital learning system.
+            </p>
+            <div class="hero-actions fade-up" style="--d:.8s">
+                <a href="#enroll" class="btn btn-peach">Enroll Now</a>
+                <a href="<%= dash %>" class="btn btn-outline"><%= user ? "Go to Dashboard" : "Student / Teacher Login" %></a>
+            </div>
+        </div>
+
+        <div class="arch-wrap fade-up" style="--d:.5s">
+            <div class="arch-ring"></div>
+            <div class="arch">
+                <div class="arch-placeholder ar">معهد الإعانة</div>
+                <img src="/images/students-group.jpg" alt="Our students" onerror="this.style.display='none'">
+            </div>
+            <div class="arch-badge">
+                <strong class="ar">العلم نور</strong>
+                <span>Knowledge is a light</span>
+            </div>
+        </div>
+    </div>
+
+    <a href="#about" class="scroll-cue" aria-label="Scroll down"><span></span></a>
+</header>
+
+<!-- SUBJECTS MARQUEE -->
+<div class="marquee">
+    <div class="marquee-track ar">
+        <span>اللغة العربية</span><span>✦</span><span>القرآن الكريم</span><span>✦</span><span>التجويد</span><span>✦</span>
+        <span>الحديث</span><span>✦</span><span>الفقه</span><span>✦</span><span>الدراسات الإسلامية</span><span>✦</span>
+        <span>اللغة العربية</span><span>✦</span><span>القرآن الكريم</span><span>✦</span><span>التجويد</span><span>✦</span>
+        <span>الحديث</span><span>✦</span><span>الفقه</span><span>✦</span><span>الدراسات الإسلامية</span><span>✦</span>
+    </div>
+</div>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+    <div class="container about-grid">
+        <div class="about-photo reveal">
+            <div class="photo-frame">
+                <div class="arch-placeholder ar">معهد الإعانة</div>
+                <img src="/images/students-group.jpeg" alt="Students of Ma'hadul Ihaanah" onerror="this.style.display='none'">
+            </div>
+        </div>
+
+        <div class="reveal" style="--d:.15s">
+            <span class="eyebrow">About the Institute</span>
+            <h2 class="section-title">Where Arabic and Islamic learning comes alive</h2>
+            <p class="section-sub">
+                Ma'hadul Ihaanah Institute of Arabic &amp; Islamic Studies is a school for students who want
+                to understand the language of the Qur'an and grow in knowledge of their deen,
+                step by step, level by level.
+            </p>
+            <ul class="checklist">
+                <li>Qur'an memorization and Tajweed guided with care</li>
+                <li>Clear levels from Beginner to Advanced</li>
+                <li>Teachers who follow every student's progress</li>
+                <li>A digital portal for students, teachers and administrators</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container stats-row">
+        <div class="stat reveal"><strong data-count="6">0</strong><span>Core Subjects</span></div>
+        <div class="stat reveal" style="--d:.1s"><strong data-count="5">0</strong><span>Learning Levels</span></div>
+        <div class="stat reveal" style="--d:.2s"><strong data-count="3">0</strong><span>Online Portals</span></div>
+        <div class="stat reveal" style="--d:.3s"><strong>24/7</strong><span>Access to Results</span></div>
+    </div>
+</section>
+
+<!-- PROGRAMS -->
+<section class="section section-alt" id="programs">
+    <div class="container">
+        <div class="center reveal">
+            <span class="eyebrow">What We Teach</span>
+            <h2 class="section-title">Our Programs</h2>
+            <p class="section-sub">Six core subjects that build a strong foundation in Arabic and Islamic knowledge.</p>
+        </div>
+
+        <div class="programs">
+            <div class="program reveal"><div class="ar">اللغة العربية</div><h3>Arabic Language</h3><p>Reading, writing, grammar and speaking, from the alphabet to confident expression.</p></div>
+            <div class="program reveal" style="--d:.1s"><div class="ar">القرآن الكريم</div><h3>Qur'an</h3><p>Recitation and memorization with regular revision and teacher feedback.</p></div>
+            <div class="program reveal" style="--d:.2s"><div class="ar">التجويد</div><h3>Tajweed</h3><p>Learn the rules of recitation, from Madd and Ghunna to Qalqalah and Ikhfa.</p></div>
+            <div class="program reveal"><div class="ar">الحديث</div><h3>Hadith</h3><p>Study the sayings of the Prophet ﷺ and learn how to apply them in daily life.</p></div>
+            <div class="program reveal" style="--d:.1s"><div class="ar">الفقه</div><h3>Fiqh</h3><p>Understand the rulings of worship and everyday living with clarity.</p></div>
+            <div class="program reveal" style="--d:.2s"><div class="ar">الدراسات الإسلامية</div><h3>Islamic Studies</h3><p>Creed, character and the history that shape a well-grounded Muslim.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+    <div class="container">
+        <div class="center reveal">
+            <span class="eyebrow">Why Ma'hadul Ihaanah</span>
+            <h2 class="section-title">Learning you can follow, every step</h2>
+        </div>
+
+        <div class="features">
+            <div class="feature reveal"><b>01</b><h3>Qur'an &amp; Tajweed Tracking</h3><p>Surah, Juz and Tajweed progress recorded by teachers and visible to students.</p></div>
+            <div class="feature reveal" style="--d:.1s"><b>02</b><h3>Attendance &amp; Results</h3><p>Daily attendance and exam results kept accurately and available anytime.</p></div>
+            <div class="feature reveal" style="--d:.2s"><b>03</b><h3>Clear Communication</h3><p>Announcements reach the whole school, one class, or just the teachers.</p></div>
+            <div class="feature reveal" style="--d:.3s"><b>04</b><h3>Three Dedicated Portals</h3><p>Separate, simple spaces for administrators, teachers and students.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- ENROLL -->
+<section class="section enroll" id="enroll">
+    <div class="enroll-pattern"></div>
+    <div class="container enroll-grid">
+        <div class="reveal enroll-text">
+            <span class="eyebrow eyebrow-light">Enrollment</span>
+            <h2 class="section-title">Begin your journey with us</h2>
+            <p class="section-sub">Fill in the form and our team will contact you to complete your admission.</p>
+
+            <ol class="steps">
+                <li><b>1</b><div><strong>Submit the form</strong><span>Tell us about the student and a phone number we can reach.</span></div></li>
+                <li><b>2</b><div><strong>We contact you</strong><span>The school will call to confirm details and the right level.</span></div></li>
+                <li><b>3</b><div><strong>Start learning</strong><span>Receive your login and join your class.</span></div></li>
+            </ol>
+        </div>
+
+        <div class="form-card reveal" style="--d:.15s">
+            <% if (enrolled) { %>
+                <div class="notice success">✅ Thank you! Your application was received. We will contact you soon.</div>
+            <% } %>
+            <% if (error) { %>
+                <div class="notice fail">Something went wrong. Please check the name and phone number and try again.</div>
+            <% } %>
+
+            <h3>Enrollment Form</h3>
+
+            <form method="POST" action="/enroll">
+                <div class="hp" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
+
+                <div class="f-grid">
+                    <div class="f-group full"><label>Student's Full Name *</label><input type="text" name="full_name" required></div>
+                    <div class="f-group"><label>Date of Birth</label><input type="date" name="date_of_birth"></div>
+                    <div class="f-group"><label>Gender</label>
+                        <select name="gender"><option value="">Select</option><option>Male</option><option>Female</option></select>
+                    </div>
+                    <div class="f-group full"><label>Level</label>
+                        <select name="level">
+                            <option value="Not sure yet">Not sure yet (assess me)</option>
+                            <% classes.forEach(c => { %>
+                                <option><%= c.class_name %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    <div class="f-group"><label>Parent / Guardian</label><input type="text" name="parent_guardian_name"></div>
+                    <div class="f-group"><label>Phone Number *</label><input type="tel" name="phone" required></div>
+                    <div class="f-group full"><label>Email</label><input type="email" name="email"></div>
+                    <div class="f-group full"><label>Address</label><input type="text" name="address"></div>
+                    <div class="f-group full"><label>Message (optional)</label><textarea name="message" rows="3"></textarea></div>
+                </div>
+
+                <button type="submit" class="btn btn-green btn-block">Submit Application</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="lp-footer">
+    <div class="container footer-inner">
+        <div>© 2026 Ma’hadul Ihaanah Institute of Arabic &amp; Islamic Studies. Knowledge is a light.</div>
+        <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="#about">About</a>
+            <a href="#programs">Programs</a>
+            <a href="#enroll">Enroll</a>
+            <a href="<%= dash %>"><%= user ? "Dashboard" : "Login" %></a>
+        </div>
+    </div>
+</footer>
+
+<script src="/js/landing.js"></script>
+</body>
+</html>

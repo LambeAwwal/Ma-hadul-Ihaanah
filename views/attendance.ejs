@@ -86,7 +86,7 @@
                 <option>Advanced</option>
             </select>
 
-            <input type="date" id="attendanceDate" class="date-input" value="<%= new Date().toISOString().split('T')[0] %>">
+<input type="date" id="attendanceDate" class="date-input" value="<%= date %>" onchange="window.location='?date=' + this.value">
 
         </div>
 
@@ -121,11 +121,12 @@
             <td><%= student.admission_number %></td>
             <td><%= student.class %></td>
             <td>
-                <div class="attendance-toggle" data-status="Present">
-                    <button class="att-btn present active" onclick="markAttendance(this,'Present')">Present</button>
-                    <button class="att-btn absent" onclick="markAttendance(this,'Absent')">Absent</button>
-                    <button class="att-btn late" onclick="markAttendance(this,'Late')">Late</button>
-                </div>
+               <% const st = statusMap[student.admission_number] || "Present"; %>
+<div class="attendance-toggle" data-status="<%= st %>">
+    <button class="att-btn present <%= st === 'Present' ? 'active' : '' %>" onclick="markAttendance(this,'Present')">Present</button>
+    <button class="att-btn absent <%= st === 'Absent' ? 'active' : '' %>" onclick="markAttendance(this,'Absent')">Absent</button>
+    <button class="att-btn late <%= st === 'Late' ? 'active' : '' %>" onclick="markAttendance(this,'Late')">Late</button>
+</div>
             </td>
         </tr>
 
